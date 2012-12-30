@@ -3,9 +3,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.lang.model.element.Element;
 import javax.swing.text.Document;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -51,43 +53,8 @@ class AmazonSearch {
 
 	public Book getBookInfoISBN(String str) {
 		Book b = new Book();
-		String[] authorList;
-		String result = getBookXML(str);
-		b.setISBN13(str);
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Node root = builder.parse(result);
-			NodeList childlist = root.getChildNodes();
-			for (int i = 0; i < childlist.getLength(); i++) {
-				Node childNode = childlist.item(i);
-				if (childNode.getNodeName() == "Author") {
-					authorList = new String[5];
-					authorList[0] = childNode.getNodeValue();
-					b.setAuthor(authorList);
-				}
-				if (childNode.getNodeName() == "Manufacturer") {
-
-				}
-				if (childNode.getNodeName() == "Title") {
-					b.setTitle(childNode.getNodeValue());
-				}
-				if (childNode.getNodeName() == "Publisher") {
-				}
-				if(childNode.getNodeName() == "ISBN"){
-					b.setISBN10(childNode.getNodeValue());
-				}
-			}
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		} catch (SAXException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO 自動生成された catch ブロック
-			e.printStackTrace();
-		}
-
+		XMLTextProc xml = new XMLTextProc(str);
+		
 		return b;
 	}
 }
