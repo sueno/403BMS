@@ -4,6 +4,7 @@ public class PostgreSQL implements IDatabase{
 	@Override
 	public boolean addBook(String ISBN) {
 		// TODO 自動生成されたメソッド・スタブ
+		
 		return false;
 	}
 

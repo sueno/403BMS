@@ -4,7 +4,7 @@ public class Book {
 	private String ISBN13;
 	private String ISBN10;
 	private int stock;
-	private String author;
+	private String[] author;
 	private String genre;
 
 	public String getTitle() {
@@ -47,12 +47,8 @@ public class Book {
 		this.stock = stock;
 	}
 
-	public String getAuthor() {
+	public String[] getAuthor() {
 		return author;
-	}
-
-	public void setAuthor(String author) {
-		this.author = author;
 	}
 
 	public String getGenre() {
@@ -61,5 +57,10 @@ public class Book {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+
+	public void setAuthor(String[] authorList) {
+		// TODO 自動生成されたメソッド・スタブ
+		
 	}
 }
