@@ -46,7 +46,7 @@ class AmazonSearch {
 			b.setISBN13(str);
 			b.setPublisher(xml.searchSingleValue("Publisher"));
 		} else {
-			System.out.println("–{‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ‚Å‚µ‚½");
+			System.out.println("æœ¬ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“ã§ã—ãŸ");
 		}
 		return b;
 	}
