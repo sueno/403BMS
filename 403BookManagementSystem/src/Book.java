@@ -7,7 +7,7 @@ public class Book {
 	private String	ISBN13;
 	private String	pictURL;
 	private String	publisher;
-	private boolean	status;
+	private boolean	status = true;
 	private int		stock;
 	private String	title;
 	private String	year;

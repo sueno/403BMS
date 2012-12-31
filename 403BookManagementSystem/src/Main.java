@@ -7,13 +7,19 @@ public class Main {
 	public static void main(String[] args) {
 
 		final Main m = new Main();
-		m.modeChanger();
+		m.initialize();
+		while (true) {
+			m.modeChanger();
+		}
 	}
 
+	private void initialize(){
+		psql = new PostgreSQL();
+	}
+	
 	private void modeChanger() {
-
-		final Scanner sc = new Scanner(System.in);
 		System.out.print("403BMS: ");
+		final Scanner sc = new Scanner(System.in);
 		final String input = sc.next();
 		final String keyword = sc.next();
 		switch (input) {
@@ -71,18 +77,25 @@ public class Main {
 
 	private boolean add(String isbn) {
 
-		psql = new PostgreSQL();
-		psql.addBook(isbn);
+		if(psql.addBook(isbn)){
+			System.out.println("Added.");
+		}else{
+			System.err.println("\nError.Add failed.");
+		}
 		return true;
 	}
 
 	private boolean remove(String isbn) {
 
+		if(psql.rmBook(isbn)){
+			System.out.println("Removed.");
+		}else{
+			System.err.println("Error.Remove failed.");
+		}
 		return true;
 	}
 
 	private boolean removelist(String[] isbn) {
-
 		return true;
 	}
 

@@ -39,30 +39,39 @@ public class PostgreSQL implements IDatabase {
 		final String title = b.getTitle();
 		final String year = b.getYear();
 
+		if(title == null){
+			return false;
+		}
+		
 		final String sql = "insert into bookshelf values(" + bookID + ",'"
 				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13
 				+ "','" + pictURL + "','" + pub + "'," + status + "," + stock
 				+ ",'" + year + "');";
-		System.out.println(sql);
 		try {
 			st.execute(sql);
+			return true;
 		} catch (final SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	@Override
 	public boolean rmBook(String ISBN) {
 
 		try {
-			st.executeQuery("SELECT * FROM bookshelf where ISBN13 =" + ISBN
-					+ ";");
-			st.execute("DELETE FROM bookshelf where ISBN13=" + ISBN + ";");
+			result = st.executeQuery("SELECT * FROM bookshelf where ISBN13 ='"
+					+ ISBN + "';");
+			if (!result.toString().isEmpty()){
+				st.execute("DELETE FROM bookshelf where ISBN13='" + ISBN + "';");
+			}else{
+				return false;
+			}
+			return true;
 		} catch (final SQLException e) {
 			e.printStackTrace();
+			return false;
 		}
-		return false;
 	}
 
 	@Override
@@ -73,7 +82,7 @@ public class PostgreSQL implements IDatabase {
 
 	@Override
 	public boolean bBook(String ISBN) {
-
+		
 		return false;
 	}
 
