@@ -1,4 +1,8 @@
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class PostgreSQL implements IDatabase {
 
@@ -13,7 +17,7 @@ public class PostgreSQL implements IDatabase {
 		try {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 
 		}
 	}
@@ -21,18 +25,18 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean addBook(String ISBN) {
 
-		AmazonSearch amzn = new AmazonSearch();
-		Book b = amzn.getBookInfoISBN(ISBN);
-		String title = b.getTitle();
-		String author = b.getAuthor();
-		String ISBN10 = b.getISBN10();
-		String ISBN13 = b.getISBN13();
-		String pub = b.getPublisher();
-		String sql = "INSERT INTO bookshelf values(" + title + "," + author
-				+ "," + ISBN10 + "," + ISBN13 + "," + pub + ");";
+		final AmazonSearch amzn = new AmazonSearch();
+		final Book b = amzn.getBookInfoISBN(ISBN);
+		final String title = b.getTitle();
+		final String author = b.getAuthor();
+		final String ISBN10 = b.getISBN10();
+		final String ISBN13 = b.getISBN13();
+		final String pub = b.getPublisher();
+		final String sql = "INSERT INTO bookshelf values(" + title + ","
+				+ author + "," + ISBN10 + "," + ISBN13 + "," + pub + ");";
 		try {
 			st.execute(sql);
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			e.printStackTrace();
 		}
 		return false;
@@ -45,7 +49,7 @@ public class PostgreSQL implements IDatabase {
 			st.executeQuery("SELECT * FROM bookshelf where ISBN13 =" + ISBN
 					+ ";");
 			st.execute("DELETE FROM bookshelf where ISBN13=" + ISBN + ";");
-		} catch (SQLException e) {
+		} catch (final SQLException e) {
 			e.printStackTrace();
 		}
 		return false;

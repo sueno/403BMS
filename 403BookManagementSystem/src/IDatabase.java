@@ -1,4 +1,5 @@
 public interface IDatabase {
+
 	boolean addBook(String ISBN);
 
 	boolean rmBook(String ISBN);
