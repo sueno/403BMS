@@ -39,10 +39,10 @@ public class PostgreSQL implements IDatabase {
 		final String title = b.getTitle();
 		final String year = b.getYear();
 
-		if(title == null){
+		if (title == null) {
 			return false;
 		}
-		
+
 		final String sql = "insert into bookshelf values(" + bookID + ",'"
 				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13
 				+ "','" + pictURL + "','" + pub + "'," + status + "," + stock
@@ -62,9 +62,9 @@ public class PostgreSQL implements IDatabase {
 		try {
 			result = st.executeQuery("SELECT * FROM bookshelf where ISBN13 ='"
 					+ ISBN + "';");
-			if (!result.toString().isEmpty()){
+			if (!result.toString().isEmpty()) {
 				st.execute("DELETE FROM bookshelf where ISBN13='" + ISBN + "';");
-			}else{
+			} else {
 				return false;
 			}
 			return true;
@@ -82,14 +82,30 @@ public class PostgreSQL implements IDatabase {
 
 	@Override
 	public boolean bBook(String ISBN) {
-		
-		return false;
+
+		String sql = "update bookshelf set status=false where isbn13=" + "'"
+				+ ISBN + "'" + ";";
+		try {
+			st.execute(sql);
+			return true;
+		} catch (final SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean rBook(String ISBN) {
 
-		return false;
+		String sql = "update bookshelf set status=true where isbn13=" + "'"
+				+ ISBN + "'" + ";";
+		try {
+			st.execute(sql);
+			return true;
+		} catch (final SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -99,9 +115,24 @@ public class PostgreSQL implements IDatabase {
 	}
 
 	@Override
-	public String[] listDB() {
+	public String listDB() {
 
-		return null;
+		int i = 0;
+		String sql = "select * from bookshelf;";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				System.out.println(result.getString(2) + " | "
+						+ result.getString(result.findColumn("author")) + " | "
+						+ result.getString(result.findColumn("stock")) + " | "
+						+ result.getString(result.findColumn("status")) + " | "
+						+ result.getString(result.findColumn("isbn13")));
+			}
+			return result.toString();
+		} catch (final SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override

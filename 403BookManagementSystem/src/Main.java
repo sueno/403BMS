@@ -13,46 +13,47 @@ public class Main {
 		}
 	}
 
-	private void initialize(){
+	private void initialize() {
+
 		psql = new PostgreSQL();
 	}
-	
+
 	private void modeChanger() {
+
 		System.out.print("403BMS: ");
 		final Scanner sc = new Scanner(System.in);
 		final String input = sc.next();
-		final String keyword = sc.next();
 		switch (input) {
 		case "add":
-			add(keyword);
+			add(sc.next());
 			break;
 		case "rm":
-			remove(keyword);
+			remove(sc.next());
 			break;
 		case "remove":
-			remove(keyword);
+			remove(sc.next());
 			break;
 		case "rmlist":
 			final String[] list = null;
 			removelist(list);
 			break;
 		case "b":
-			borrowbook(keyword);
+			borrowbook(sc.next());
 			break;
 		case "borrow":
-			borrowbook(keyword);
+			borrowbook(sc.next());
 			break;
 		case "r":
-			returnbook(keyword);
+			returnbook(sc.next());
 			break;
 		case "return":
-			returnbook(keyword);
+			returnbook(sc.next());
 			break;
 		case "s":
-			search(keyword);
+			search(sc.next());
 			break;
 		case "search":
-			search(keyword);
+			search(sc.next());
 			break;
 		case "ls":
 			list();
@@ -77,9 +78,9 @@ public class Main {
 
 	private boolean add(String isbn) {
 
-		if(psql.addBook(isbn)){
+		if (psql.addBook(isbn)) {
 			System.out.println("Added.");
-		}else{
+		} else {
 			System.err.println("\nError.Add failed.");
 		}
 		return true;
@@ -87,9 +88,9 @@ public class Main {
 
 	private boolean remove(String isbn) {
 
-		if(psql.rmBook(isbn)){
+		if (psql.rmBook(isbn)) {
 			System.out.println("Removed.");
-		}else{
+		} else {
 			System.err.println("Error.Remove failed.");
 		}
 		return true;
@@ -100,12 +101,12 @@ public class Main {
 	}
 
 	private boolean borrowbook(String isbn) {
-
+		psql.bBook(isbn);
 		return true;
 	}
 
 	private boolean returnbook(String isbn) {
-
+		psql.rBook(isbn);
 		return true;
 	}
 
@@ -116,6 +117,7 @@ public class Main {
 
 	private boolean list() {
 
+		psql.listDB();
 		return true;
 	}
 

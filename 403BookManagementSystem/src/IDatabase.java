@@ -12,7 +12,7 @@ public interface IDatabase {
 
 	String[] searchDB(String key);
 
-	String[] listDB();
+	String listDB();
 
 	String[] listStatus(int mode);
 }
