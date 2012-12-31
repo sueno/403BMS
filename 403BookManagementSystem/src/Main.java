@@ -1,19 +1,21 @@
 import java.util.Scanner;
 
 public class Main {
-	PostgreSQL psql;
+
+	PostgreSQL	psql;
+
 	public static void main(String[] args) {
 
-		Main m = new Main();
+		final Main m = new Main();
 		m.modeChanger();
 	}
 
 	private void modeChanger() {
-		
-		Scanner sc = new Scanner(System.in);
+
+		final Scanner sc = new Scanner(System.in);
 		System.out.print("403BMS: ");
-		String input = sc.next();
-		String keyword = sc.next();
+		final String input = sc.next();
+		final String keyword = sc.next();
 		switch (input) {
 		case "add":
 			add(keyword);
@@ -25,7 +27,7 @@ public class Main {
 			remove(keyword);
 			break;
 		case "rmlist":
-			String[] list = null;
+			final String[] list = null;
 			removelist(list);
 			break;
 		case "b":
@@ -68,6 +70,7 @@ public class Main {
 	}
 
 	private boolean add(String isbn) {
+
 		psql = new PostgreSQL();
 		psql.addBook(isbn);
 		return true;

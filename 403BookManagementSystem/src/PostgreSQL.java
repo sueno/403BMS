@@ -29,7 +29,7 @@ public class PostgreSQL implements IDatabase {
 		final Book b = amzn.getBookInfoISBN(ISBN);
 		final String author = b.getAuthor();
 		final String bookID = b.getBookID();
-		final String genre = b.getGenre();
+		b.getGenre();
 		final String ISBN10 = b.getISBN10();
 		final String ISBN13 = b.getISBN13();
 		final String pictURL = b.getPictURL();
@@ -40,9 +40,9 @@ public class PostgreSQL implements IDatabase {
 		final String year = b.getYear();
 
 		final String sql = "insert into bookshelf values(" + bookID + ",'"
-				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13 + "','"
-				+ pictURL + "','" + pub + "'," + status + "," + stock + ",'" + year
-				+ "');";
+				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13
+				+ "','" + pictURL + "','" + pub + "'," + status + "," + stock
+				+ ",'" + year + "');";
 		System.out.println(sql);
 		try {
 			st.execute(sql);
