@@ -25,7 +25,7 @@ class AmazonSearch {
 			HttpURLConnection connection = (HttpURLConnection) url
 					.openConnection();
 			BufferedReader fin = new BufferedReader(new InputStreamReader(
-					connection.getInputStream(), "UTF-8"));
+					connection.getInputStream(), "UTF8"));
 			String line;
 			StringBuilder sb = new StringBuilder();
 			while ((line = fin.readLine()) != null)
