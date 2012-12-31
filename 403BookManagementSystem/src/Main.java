@@ -1,7 +1,7 @@
 import java.util.Scanner;
 
 public class Main {
-
+	PostgreSQL psql;
 	public static void main(String[] args) {
 
 		Main m = new Main();
@@ -9,7 +9,7 @@ public class Main {
 	}
 
 	private void modeChanger() {
-
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.print("403BMS: ");
 		String input = sc.next();
@@ -68,7 +68,8 @@ public class Main {
 	}
 
 	private boolean add(String isbn) {
-
+		psql = new PostgreSQL();
+		psql.addBook(isbn);
 		return true;
 	}
 

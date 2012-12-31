@@ -18,7 +18,7 @@ public class PostgreSQL implements IDatabase {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
 		} catch (final SQLException e) {
-
+			e.printStackTrace();
 		}
 	}
 
@@ -27,13 +27,23 @@ public class PostgreSQL implements IDatabase {
 
 		final AmazonSearch amzn = new AmazonSearch();
 		final Book b = amzn.getBookInfoISBN(ISBN);
-		final String title = b.getTitle();
 		final String author = b.getAuthor();
+		final String bookID = b.getBookID();
+		final String genre = b.getGenre();
 		final String ISBN10 = b.getISBN10();
 		final String ISBN13 = b.getISBN13();
+		final String pictURL = b.getPictURL();
 		final String pub = b.getPublisher();
-		final String sql = "INSERT INTO bookshelf values(" + title + ","
-				+ author + "," + ISBN10 + "," + ISBN13 + "," + pub + ");";
+		final boolean status = b.getStatus();
+		final int stock = b.getStock();
+		final String title = b.getTitle();
+		final String year = b.getYear();
+
+		final String sql = "insert into bookshelf values(" + bookID + ",'"
+				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13 + "','"
+				+ pictURL + "','" + pub + "'," + status + "," + stock + ",'" + year
+				+ "');";
+		System.out.println(sql);
 		try {
 			st.execute(sql);
 		} catch (final SQLException e) {
