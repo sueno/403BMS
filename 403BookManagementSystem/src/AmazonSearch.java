@@ -3,24 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.lang.model.element.Element;
-import javax.swing.text.Document;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-//import javax.xml.soap.Node;
-import org.w3c.dom.*;
-import org.xml.sax.SAXException;
-
-//AmazonアクセスキーID AKIAIWAIBB22KSIA35AQ
-//Amazonシークレット 9h7f1MiYvNKKL9BXdGhvXFE6thUk6Hg1T7JJN8/n
-
-//AmazonアクセスキーID AKIAI7TKUP6SKXN4MXBA 
-//AmazonSecret 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
 class AmazonSearch {
 	private String getBookXML(String str) {
 		Map<String, String> keyMap = new HashMap<String, String>();
@@ -53,8 +38,16 @@ class AmazonSearch {
 
 	public Book getBookInfoISBN(String str) {
 		Book b = new Book();
-		XMLTextProc xml = new XMLTextProc(str);
-		
+		XMLTextProc xml = new XMLTextProc(this.getBookXML(str));
+		if (xml.searchCheck()) {
+			b.setTitle(xml.searchSingleValue("Title"));
+			b.setAuthor(xml.searchMultiValues("Author"));
+			b.setISBN10(xml.searchSingleValue("ISBN"));
+			b.setISBN13(str);
+			b.setPublisher(xml.searchSingleValue("Publisher"));
+		} else {
+			System.out.println("本が見つかりませんでした");
+		}
 		return b;
 	}
 }
