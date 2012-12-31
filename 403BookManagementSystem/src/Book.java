@@ -8,6 +8,7 @@ public class Book {
 	private String	author;
 	private String	genre;
 	private String	publisher;
+	private boolean status;
 
 	public String getTitle() {
 
@@ -87,6 +88,16 @@ public class Book {
 	public void setPublisher(String publisher) {
 
 		this.publisher = publisher;
+	}
+
+	public boolean getStatus() {
+
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+
+		this.status = status;
 	}
 
 }

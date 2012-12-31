@@ -1,13 +1,113 @@
+import java.util.Scanner;
+
 public class Main {
 
 	public static void main(String[] args) {
 
-		final AmazonSearch amzn = new AmazonSearch();
-		final Book b = amzn.getBookInfoISBN("9784774145020");
-		System.out.println("Title : " + b.getTitle());
-		System.out.println("Author: " + b.getAuthor());
-		System.out.println("ISBN10: " + b.getISBN10());
-		System.out.println("ISBN13: " + b.getISBN13());
-		System.out.println("Pub   : " + b.getPublisher());
+		Main m = new Main();
+		m.modeChanger();
+	}
+
+	private void modeChanger() {
+
+		Scanner sc = new Scanner(System.in);
+		System.out.print("403BMS: ");
+		String input = sc.next();
+		String keyword = sc.next();
+		switch (input) {
+		case "add":
+			add(keyword);
+			break;
+		case "rm":
+			remove(keyword);
+			break;
+		case "remove":
+			remove(keyword);
+			break;
+		case "rmlist":
+			String[] list = null;
+			removelist(list);
+			break;
+		case "b":
+			borrowbook(keyword);
+			break;
+		case "borrow":
+			borrowbook(keyword);
+			break;
+		case "r":
+			returnbook(keyword);
+			break;
+		case "return":
+			returnbook(keyword);
+			break;
+		case "s":
+			search(keyword);
+			break;
+		case "search":
+			search(keyword);
+			break;
+		case "ls":
+			list();
+			break;
+		case "list":
+			list();
+			break;
+		case "st":
+			status();
+			break;
+		case "status":
+			status();
+			break;
+		case "exit":
+			exit();
+			break;
+		case "q":
+			exit();
+			break;
+		}
+	}
+
+	private boolean add(String isbn) {
+
+		return true;
+	}
+
+	private boolean remove(String isbn) {
+
+		return true;
+	}
+
+	private boolean removelist(String[] isbn) {
+
+		return true;
+	}
+
+	private boolean borrowbook(String isbn) {
+
+		return true;
+	}
+
+	private boolean returnbook(String isbn) {
+
+		return true;
+	}
+
+	private boolean search(String isbn) {
+
+		return true;
+	}
+
+	private boolean list() {
+
+		return true;
+	}
+
+	private boolean status() {
+
+		return true;
+	}
+
+	private void exit() {
+
 	}
 }
