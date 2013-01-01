@@ -22,7 +22,7 @@ public class XMLTextProc {
 
 		int beginIndex = xml.indexOf("<" + key + ">");
 		int endIndex = xml.indexOf("</" + key + ">");
-		if(beginIndex == -1){
+		if (beginIndex == -1) {
 			return null;
 		}
 		String result = xml
@@ -34,7 +34,7 @@ public class XMLTextProc {
 
 		int beginIndex = xml.indexOf("<" + key + ">", start);
 		int endIndex = xml.indexOf("</" + key + ">", start);
-		if(beginIndex == -1){
+		if (beginIndex == -1) {
 			return null;
 		}
 		// System.out.println(xml.substring((beginIndex + key.length() +

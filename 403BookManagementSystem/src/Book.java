@@ -1,6 +1,3 @@
-import java.util.UUID;
-
-
 public class Book {
 
 	private String	author;
@@ -16,12 +13,12 @@ public class Book {
 	private String	year;
 
 	public String getAuthor() {
-		
+
 		return author;
 	}
 
 	public String getBookID(String key) {
-		
+
 		return bookID;
 	}
 

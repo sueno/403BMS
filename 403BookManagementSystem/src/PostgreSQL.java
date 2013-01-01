@@ -42,7 +42,6 @@ public class PostgreSQL implements IDatabase {
 
 		Book b = amzn.getBookInfoISBN(ISBN);
 		String author = b.getAuthor();
-		String bookID = b.getBookID(ISBN);
 		String ISBN10 = b.getISBN10();
 		String ISBN13 = b.getISBN13();
 		String pictURL = b.getPictURL();

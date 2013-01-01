@@ -18,6 +18,7 @@ public class Main {
 		psql = new PostgreSQL();
 	}
 
+	@SuppressWarnings("resource")
 	private void modeChanger() {
 
 		System.out.print("403BMS: ");
