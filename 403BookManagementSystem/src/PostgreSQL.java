@@ -169,16 +169,26 @@ public class PostgreSQL implements IDatabase {
 				} else {
 					jaStatus = "貸出中";
 				}
+				//文字数整形
 				author = result.getString(result.findColumn("author"));
 				if (author.length() > 10) {
 					author = author.substring(0, 10) + "...";
+				} else {
+					for (int i = 0; author.length() + i != 20; i++) {
+						author += " ";
+					}
 				}
 				title = result.getString(result.findColumn("title"));
 				if (title.length() > 20) {
 					title = title.substring(0, 20) + "...";
+				}else {
+					for (int i = 0; title.length() + i != 20; i++) {
+						title += " ";
+					}
 				}
-				System.out.println(title + " | " + author + " | " + jaStatus
-						+ " | " + result.getString(result.findColumn("isbn13"))
+				System.out.println(title + " \t| " + author + " \t| "
+						+ jaStatus + " \t| "
+						+ result.getString(result.findColumn("isbn13"))
 						+ " | " + "画像URL: "
 						+ result.getString(result.findColumn("picturl")));
 				bookcount++;

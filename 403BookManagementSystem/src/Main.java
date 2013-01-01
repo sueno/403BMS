@@ -3,7 +3,8 @@ import java.util.Scanner;
 public class Main {
 
 	PostgreSQL	psql;
-	Scanner sc;
+	Scanner		sc;
+
 	public static void main(String[] args) {
 
 		Main m = new Main();
@@ -18,7 +19,6 @@ public class Main {
 		psql = new PostgreSQL();
 	}
 
-	@SuppressWarnings("resource")
 	private void modeChanger() {
 
 		System.out.print("403BMS: ");
@@ -32,8 +32,6 @@ public class Main {
 			inf();
 			break;
 		case "rm":
-			remove(sc.next());
-			break;
 		case "remove":
 			remove(sc.next());
 			break;
@@ -42,38 +40,34 @@ public class Main {
 			removelist(list);
 			break;
 		case "b":
-			borrowbook(sc.next());
-			break;
 		case "borrow":
 			borrowbook(sc.next());
 			break;
 		case "r":
-			returnbook(sc.next());
-			break;
 		case "return":
 			returnbook(sc.next());
 			break;
 		case "s":
-			search(sc.next());
-			break;
 		case "search":
 			search(sc.next());
 			break;
 		case "ls":
-			list();
-			break;
 		case "list":
 			list();
 			break;
 		case "st":
-			status();
-			break;
 		case "status":
 			status();
 			break;
-		case "exit":
-			exit();
+		case "clear":
+		case "cls":
+			clear();
 			break;
+		case "help":
+		case "h":
+			help();
+			break;
+		case "exit":
 		case "q":
 			exit();
 			break;
@@ -91,13 +85,16 @@ public class Main {
 	}
 
 	private void inf() {
+
 		System.out.println("---inf mode---(quit:q)");
-		while(true){
-			String input = sc.nextLine();
-			if(input == "q"){
+		while (true) {
+			String input = sc.next();
+			if (input.equals("q")) {
 				break;
+			} else {
+				add(input);
 			}
-			add(input);
+
 		}
 	}
 
@@ -147,5 +144,36 @@ public class Main {
 
 	private void exit() {
 
+		System.exit(0);
+	}
+	
+	private void help(){
+		clear();
+		System.out.println("---403BMS Help Page---");
+		System.out.println("add [IBSN]");
+		System.out.println("inf");
+		System.out.println("rm [ISBN]");
+		System.out.println("remove [ISBN]");
+		System.out.println("b [ISBN]");
+		System.out.println("borrow [ISBN]");
+		System.out.println("r [ISBN]");
+		System.out.println("return [ISBN]");
+		System.out.println("ls");
+		System.out.println("list");
+		System.out.println("s");
+		System.out.println("status");
+		System.out.println("h");
+		System.out.println("help");
+		System.out.println("cls");
+		System.out.println("clear");
+		System.out.println("q");
+		System.out.println("exit");
+
+	}
+	
+	private void clear(){
+		for(int i=0;i<300;i++){
+			System.out.println();
+		}
 	}
 }
