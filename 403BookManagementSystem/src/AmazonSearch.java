@@ -4,9 +4,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import com.rosaloves.bitlyj.*;
+import static com.rosaloves.bitlyj.Bitly.*;
+import com.rosaloves.bitlyj.Url;
+
 
 class AmazonSearch {
 
@@ -56,8 +59,10 @@ class AmazonSearch {
 
 			b.setPictURL(picChild.searchSingleValue("URL"));
 			try {
-				b.setDetailURL(URLDecoder.decode(
-						xml.searchSingleValue("DetailPageURL"), "UTF-8"));
+				String beforeUrl = URLDecoder.decode(
+						xml.searchSingleValue("DetailPageURL"), "UTF-8");
+				String url = Bitly.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e").call(shorten(beforeUrl)).getShortUrl();
+				b.setDetailURL(url);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
