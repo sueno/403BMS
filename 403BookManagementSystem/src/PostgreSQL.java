@@ -119,7 +119,7 @@ public class PostgreSQL implements IDatabase {
 		// select * from bookshelf where id =(select min(id) from bookshelf
 		// where status = true AND isbn13 = 'ISBN');
 
-		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
+		sql = "update bookshelf set status=true where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
 		sql += ISBN;
 		sql += "');";
 		try {
@@ -134,7 +134,7 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean rBook(String ISBN) {
 
-		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
+		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
 		sql += ISBN;
 		sql += "');";
 		try {
