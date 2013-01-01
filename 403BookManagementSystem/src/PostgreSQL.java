@@ -155,6 +155,8 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String listDB() {
 
+		int bookcount = 0;
+		String title;
 		String jaStatus;
 		String author;
 		sql = "select * from bookshelf;";
@@ -168,14 +170,20 @@ public class PostgreSQL implements IDatabase {
 					jaStatus = "貸出中";
 				}
 				author = result.getString(result.findColumn("author"));
-				if(author.length() > 10){
+				if (author.length() > 10) {
 					author = author.substring(0, 10) + "...";
 				}
-				System.out.println(result.getString(2) + " | "
-						+ author + " | "
-						+ jaStatus + " | "
-						+ result.getString(result.findColumn("isbn13")));
+				title = result.getString(result.findColumn("title"));
+				if (title.length() > 20) {
+					title = title.substring(0, 20) + "...";
+				}
+				System.out.println(title + " | " + author + " | " + jaStatus
+						+ " | " + result.getString(result.findColumn("isbn13"))
+						+ " | " + "画像URL: "
+						+ result.getString(result.findColumn("picturl")));
+				bookcount++;
 			}
+			System.out.println("結果:" + bookcount + "冊");
 			return result.toString();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -184,7 +192,7 @@ public class PostgreSQL implements IDatabase {
 	}
 
 	@Override
-	public String[] listStatus(int mode) {
+	public String listStatus(int mode) {
 
 		return null;
 	}

@@ -14,5 +14,5 @@ public interface IDatabase {
 
 	String listDB();
 
-	String[] listStatus(int mode);
+	String listStatus(int mode);
 }
