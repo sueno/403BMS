@@ -1,3 +1,5 @@
+import static com.rosaloves.bitlyj.Bitly.shorten;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -5,8 +7,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import com.rosaloves.bitlyj.*;
-import static com.rosaloves.bitlyj.Bitly.*;
+
+import com.rosaloves.bitlyj.Bitly;
 
 class AmazonSearch {
 

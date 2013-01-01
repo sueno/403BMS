@@ -51,6 +51,9 @@ public class Main {
 		case "search":
 			search(sc.next());
 			break;
+		case ";s":
+		case "ks":
+			System.out.println("ls?");
 		case "ls":
 		case "list":
 			list();
@@ -70,6 +73,9 @@ public class Main {
 		case "exit":
 		case "q":
 			exit();
+			break;
+		default:
+			System.out.println("認識できないコマンド: " + input);
 			break;
 		}
 	}
@@ -114,13 +120,21 @@ public class Main {
 
 	private void borrowbook(String isbn) {
 
-		psql.bBook(isbn);
+		if (psql.bBook(isbn)) {
+			System.out.println("借りました");
+		} else {
+
+		}
 
 	}
 
 	private void returnbook(String isbn) {
 
-		psql.rBook(isbn);
+		if (psql.rBook(isbn)) {
+			System.out.println("返しました");
+		} else {
+
+		}
 
 	}
 
@@ -146,33 +160,35 @@ public class Main {
 
 		System.exit(0);
 	}
-	
-	private void help(){
+
+	private void help() {
+
 		clear();
 		System.out.println("---403BMS Help Page---");
-		System.out.println("add [IBSN]");
-		System.out.println("inf");
-		System.out.println("rm [ISBN]");
-		System.out.println("remove [ISBN]");
-		System.out.println("b [ISBN]");
+		System.out.println("add [IBSN]     :本を追加します");
+		System.out.println("inf            :本を連続で追加します");
+		System.out.println("rm [ISBN]      :本を削除します");
+		System.out.println("remove [ISBN]  ");
+		System.out.println("b [ISBN]       :本を借ります");
 		System.out.println("borrow [ISBN]");
-		System.out.println("r [ISBN]");
+		System.out.println("r [ISBN]       :本を返します");
 		System.out.println("return [ISBN]");
-		System.out.println("ls");
+		System.out.println("ls             :データベースの内容を表示します");
 		System.out.println("list");
-		System.out.println("s");
+		System.out.println("s              :貸出中の書籍の一覧を表示します");
 		System.out.println("status");
-		System.out.println("h");
+		System.out.println("h              :このヘルプを表示します");
 		System.out.println("help");
-		System.out.println("cls");
+		System.out.println("cls            :画面をクリアします");
 		System.out.println("clear");
-		System.out.println("q");
+		System.out.println("q              :管理システムを終了します");
 		System.out.println("exit");
 
 	}
-	
-	private void clear(){
-		for(int i=0;i<300;i++){
+
+	private void clear() {
+
+		for (int i = 0; i < 300; i++) {
 			System.out.println();
 		}
 	}
