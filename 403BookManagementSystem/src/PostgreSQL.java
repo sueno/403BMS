@@ -155,13 +155,25 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String listDB() {
 
+		String jaStatus;
+		String author;
 		sql = "select * from bookshelf;";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
+				if (result.getString(result.findColumn("status")).startsWith(
+						"t")) {
+					jaStatus = "貸出可";
+				} else {
+					jaStatus = "貸出中";
+				}
+				author = result.getString(result.findColumn("author"));
+				if(author.length() > 10){
+					author = author.substring(0, 10) + "...";
+				}
 				System.out.println(result.getString(2) + " | "
-						+ result.getString(result.findColumn("author")) + " | "
-						+ result.getString(result.findColumn("status")) + " | "
+						+ author + " | "
+						+ jaStatus + " | "
 						+ result.getString(result.findColumn("isbn13")));
 			}
 			return result.toString();
