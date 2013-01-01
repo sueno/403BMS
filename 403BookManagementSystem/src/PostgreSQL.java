@@ -94,7 +94,8 @@ public class PostgreSQL implements IDatabase {
 			result = st.executeQuery("SELECT * FROM bookshelf where ISBN13 ='"
 					+ ISBN + "';");
 			if (!result.toString().isEmpty()) {
-				st.execute("DELETE FROM bookshelf where ISBN13='" + ISBN + "';");
+				st.execute("DELETE FROM bookshelf where id =(select min(id) from bookshelf where isbn13 ='"
+						+ ISBN + "' AND status = true);");
 			} else {
 				return false;
 			}
@@ -193,6 +194,24 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String listStatus(int mode) {
 
+		String jaStatus;
+		sql = "select * from bookshelf where status = false;";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				if (result.getString(result.findColumn("status")).startsWith(
+						"t")) {
+					jaStatus = "貸出可";
+				} else {
+					jaStatus = "貸出中";
+				}
+				System.out.println(result.getString(result.findColumn("title"))
+						+ "[" + result.getString(result.findColumn("isbn13"))
+						+ "] : " + jaStatus);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 }

@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
 
 	PostgreSQL	psql;
-
+	Scanner sc;
 	public static void main(String[] args) {
 
 		Main m = new Main();
@@ -22,11 +22,14 @@ public class Main {
 	private void modeChanger() {
 
 		System.out.print("403BMS: ");
-		Scanner sc = new Scanner(System.in);
+		sc = new Scanner(System.in);
 		String input = sc.next();
 		switch (input) {
 		case "add":
 			add(sc.next());
+			break;
+		case "inf":
+			inf();
 			break;
 		case "rm":
 			remove(sc.next());
@@ -77,57 +80,69 @@ public class Main {
 		}
 	}
 
-	private boolean add(String isbn) {
+	private void add(String isbn) {
 
 		if (psql.addBook(isbn)) {
 			System.out.println("Added.");
 		} else {
 			System.err.println("Error.Add failed.");
 		}
-		return true;
+
 	}
 
-	private boolean remove(String isbn) {
+	private void inf() {
+		System.out.println("---inf mode---(quit:q)");
+		while(true){
+			String input = sc.nextLine();
+			if(input == "q"){
+				break;
+			}
+			add(input);
+		}
+	}
+
+	private void remove(String isbn) {
 
 		if (psql.rmBook(isbn)) {
 			System.out.println("Removed.");
 		} else {
 			System.err.println("Error.Remove failed.");
 		}
-		return true;
+
 	}
 
-	private boolean removelist(String[] isbn) {
+	private void removelist(String[] isbn) {
 
-		return true;
 	}
 
-	private boolean borrowbook(String isbn) {
+	private void borrowbook(String isbn) {
 
 		psql.bBook(isbn);
-		return true;
+
 	}
 
-	private boolean returnbook(String isbn) {
+	private void returnbook(String isbn) {
 
 		psql.rBook(isbn);
-		return true;
+
 	}
 
-	private boolean search(String isbn) {
+	private void search(String isbn) {
 
-		return true;
+		psql.searchDB(isbn);
+
 	}
 
-	private boolean list() {
+	private void list() {
 
 		psql.listDB();
-		return true;
+
 	}
 
-	private boolean status() {
+	private void status() {
 
-		return true;
+		psql.listStatus(0);
+
 	}
 
 	private void exit() {
