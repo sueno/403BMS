@@ -10,7 +10,6 @@ import com.rosaloves.bitlyj.*;
 import static com.rosaloves.bitlyj.Bitly.*;
 import com.rosaloves.bitlyj.Url;
 
-
 class AmazonSearch {
 
 	private String getBookXML(String str) {
@@ -56,13 +55,17 @@ class AmazonSearch {
 			b.setPublisher(xml.searchSingleValue("Publisher"));
 			XMLTextProc picChild = new XMLTextProc(
 					xml.searchSingleValue("MediumImage"));
-
-			b.setPictURL(picChild.searchSingleValue("URL"));
 			try {
-				String beforeUrl = URLDecoder.decode(
-						xml.searchSingleValue("DetailPageURL"), "UTF-8");
-				String url = Bitly.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e").call(shorten(beforeUrl)).getShortUrl();
-				b.setDetailURL(url);
+				String beforeUrlPict = picChild.searchSingleValue("URL");
+				String beforeUrlDetail = xml.searchSingleValue("DetailPageURL");
+				String picUrl = Bitly
+						.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e")
+						.call(shorten(beforeUrlPict)).getShortUrl();
+				String detailUrl = Bitly
+						.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e")
+						.call(shorten(beforeUrlDetail)).getShortUrl();
+				b.setPictURL(picUrl);
+				b.setDetailURL(detailUrl);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
