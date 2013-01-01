@@ -3,12 +3,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import com.rosaloves.bitlyj.*;
 import static com.rosaloves.bitlyj.Bitly.*;
-import com.rosaloves.bitlyj.Url;
 
 class AmazonSearch {
 

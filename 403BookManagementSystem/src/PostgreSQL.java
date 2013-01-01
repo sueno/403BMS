@@ -14,6 +14,13 @@ public class PostgreSQL implements IDatabase {
 	String			sql		= null;
 	AmazonSearch	amzn	= null;
 
+	/*
+	 * create table bookshelf( id SERIAL, title varchar(1000), author
+	 * varchar(1000), isbn10 varchar(20), isbn13 varchar(20), picturl
+	 * varchar(1000), detailurl varchar(1000), publisher varchar(1000),
+	 * publicationdate varchar(50), status boolean, year varchar(10));
+	 */
+
 	public PostgreSQL() {
 
 		init();
@@ -51,10 +58,27 @@ public class PostgreSQL implements IDatabase {
 		}
 
 		try {
-			sql = "insert into bookshelf values(" + bookID + ",'" + title
-					+ "','" + author + "','" + ISBN10 + "','" + ISBN13 + "','"
-					+ pictURL + "','" + detailURL + "','" + publisher + "','"
-					+ publicationDate + "'," + status + ",'" + year + "');";
+			sql = "insert into bookshelf (title , author , isbn10 ,  isbn13 ,  picturl ,  detailurl ,  publisher ,  publicationdate ,  status ,  year ) values('"
+					+ title
+					+ "','"
+					+ author
+					+ "','"
+					+ ISBN10
+					+ "','"
+					+ ISBN13
+					+ "','"
+					+ pictURL
+					+ "','"
+					+ detailURL
+					+ "','"
+					+ publisher
+					+ "','"
+					+ publicationDate
+					+ "',"
+					+ status
+					+ ",'"
+					+ year
+					+ "');";
 			System.out.print("New ");
 			st.execute(sql);
 			return true;
@@ -91,8 +115,13 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean bBook(String ISBN) {
 
-		sql = "update bookshelf set status=false where isbn13=" + "'" + ISBN
-				+ "'" + ";";
+		// 借りられていない同じ本を探すSQL
+		// select * from bookshelf where id =(select min(id) from bookshelf
+		// where status = true AND isbn13 = 'ISBN');
+
+		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
+		sql += ISBN;
+		sql += "');";
 		try {
 			st.execute(sql);
 			return true;
@@ -105,8 +134,9 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean rBook(String ISBN) {
 
-		sql = "update bookshelf set status=true where isbn13=" + "'" + ISBN
-				+ "'" + ";";
+		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
+		sql += ISBN;
+		sql += "');";
 		try {
 			st.execute(sql);
 			return true;
@@ -131,7 +161,6 @@ public class PostgreSQL implements IDatabase {
 			while (result.next()) {
 				System.out.println(result.getString(2) + " | "
 						+ result.getString(result.findColumn("author")) + " | "
-						+ result.getString(result.findColumn("stock")) + " | "
 						+ result.getString(result.findColumn("status")) + " | "
 						+ result.getString(result.findColumn("isbn13")));
 			}
