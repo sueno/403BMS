@@ -15,3 +15,7 @@ PostgreSQLを利用して管理します。
      h  または help          ヘルプを表示します
      clsまたは clear         画面をクリアします
      q  または exit          管理システムを終了します
+
+以下のコマンドで実行できます
+
+    java -jar 403BookManagementSystem/ExportedJAR/403BMS.jar
