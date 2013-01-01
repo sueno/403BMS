@@ -6,51 +6,59 @@ import java.sql.Statement;
 
 public class PostgreSQL implements IDatabase {
 
-	Connection	db		= null;
-	Statement	st		= null;
-	ResultSet	result	= null;
+	Connection		db		= null;
+	Statement		st		= null;
+	ResultSet		result	= null;
 
-	String		url		= "jdbc:postgresql:postgres";
+	String			url		= "jdbc:postgresql:postgres";
+	String			sql		= null;
+	AmazonSearch	amzn	= null;
 
 	public PostgreSQL() {
 
+		init();
 		try {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private void init() {
+
+		amzn = new AmazonSearch();
 	}
 
 	@Override
 	public boolean addBook(String ISBN) {
 
-		final AmazonSearch amzn = new AmazonSearch();
-		final Book b = amzn.getBookInfoISBN(ISBN);
-		final String author = b.getAuthor();
-		final String bookID = b.getBookID();
-		b.getGenre();
-		final String ISBN10 = b.getISBN10();
-		final String ISBN13 = b.getISBN13();
-		final String pictURL = b.getPictURL();
-		final String pub = b.getPublisher();
-		final boolean status = b.getStatus();
-		final int stock = b.getStock();
-		final String title = b.getTitle();
-		final String year = b.getYear();
+		Book b = amzn.getBookInfoISBN(ISBN);
+		String author = b.getAuthor();
+		String bookID = b.getBookID(ISBN);
+		String ISBN10 = b.getISBN10();
+		String ISBN13 = b.getISBN13();
+		String pictURL = b.getPictURL();
+		String detailURL = b.getDetailURL();
+		String publisher = b.getPublisher();
+		String publicationDate = b.getPublicationDate();
+		boolean status = b.getStatus();
+		String title = b.getTitle();
+		String year = b.getYear();
 
 		if (title == null) {
 			return false;
 		}
 
-		final String sql = "insert into bookshelf values(" + bookID + ",'"
-				+ title + "','" + author + "','" + ISBN10 + "','" + ISBN13
-				+ "','" + pictURL + "','" + pub + "'," + status + "," + stock
-				+ ",'" + year + "');";
 		try {
+			sql = "insert into bookshelf values(" + bookID + ",'" + title
+					+ "','" + author + "','" + ISBN10 + "','" + ISBN13 + "','"
+					+ pictURL + "','" + detailURL + "','" + publisher + "','"
+					+ publicationDate + "'," + status + ",'" + year + "');";
+			System.out.print("New ");
 			st.execute(sql);
 			return true;
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -68,7 +76,7 @@ public class PostgreSQL implements IDatabase {
 				return false;
 			}
 			return true;
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -83,12 +91,12 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean bBook(String ISBN) {
 
-		String sql = "update bookshelf set status=false where isbn13=" + "'"
-				+ ISBN + "'" + ";";
+		sql = "update bookshelf set status=false where isbn13=" + "'" + ISBN
+				+ "'" + ";";
 		try {
 			st.execute(sql);
 			return true;
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -97,12 +105,12 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean rBook(String ISBN) {
 
-		String sql = "update bookshelf set status=true where isbn13=" + "'"
-				+ ISBN + "'" + ";";
+		sql = "update bookshelf set status=true where isbn13=" + "'" + ISBN
+				+ "'" + ";";
 		try {
 			st.execute(sql);
 			return true;
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
 		}
@@ -117,8 +125,7 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String listDB() {
 
-		int i = 0;
-		String sql = "select * from bookshelf;";
+		sql = "select * from bookshelf;";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
@@ -129,7 +136,7 @@ public class PostgreSQL implements IDatabase {
 						+ result.getString(result.findColumn("isbn13")));
 			}
 			return result.toString();
-		} catch (final SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -140,5 +147,4 @@ public class PostgreSQL implements IDatabase {
 
 		return null;
 	}
-
 }

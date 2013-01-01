@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		final Main m = new Main();
+		Main m = new Main();
 		m.initialize();
 		while (true) {
 			m.modeChanger();
@@ -21,8 +21,8 @@ public class Main {
 	private void modeChanger() {
 
 		System.out.print("403BMS: ");
-		final Scanner sc = new Scanner(System.in);
-		final String input = sc.next();
+		Scanner sc = new Scanner(System.in);
+		String input = sc.next();
 		switch (input) {
 		case "add":
 			add(sc.next());
@@ -34,7 +34,7 @@ public class Main {
 			remove(sc.next());
 			break;
 		case "rmlist":
-			final String[] list = null;
+			String[] list = null;
 			removelist(list);
 			break;
 		case "b":
@@ -81,7 +81,7 @@ public class Main {
 		if (psql.addBook(isbn)) {
 			System.out.println("Added.");
 		} else {
-			System.err.println("\nError.Add failed.");
+			System.err.println("Error.Add failed.");
 		}
 		return true;
 	}
@@ -97,15 +97,18 @@ public class Main {
 	}
 
 	private boolean removelist(String[] isbn) {
+
 		return true;
 	}
 
 	private boolean borrowbook(String isbn) {
+
 		psql.bBook(isbn);
 		return true;
 	}
 
 	private boolean returnbook(String isbn) {
+
 		psql.rBook(isbn);
 		return true;
 	}

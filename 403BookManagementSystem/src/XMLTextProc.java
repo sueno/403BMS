@@ -20,30 +20,36 @@ public class XMLTextProc {
 
 	public String searchSingleValue(String key) {
 
-		final int beginIndex = xml.indexOf("<" + key + ">");
-		final int endIndex = xml.indexOf("</" + key + ">");
-		final String result = xml.substring((beginIndex + key.length() + 2),
-				endIndex);
+		int beginIndex = xml.indexOf("<" + key + ">");
+		int endIndex = xml.indexOf("</" + key + ">");
+		if(beginIndex == -1){
+			return null;
+		}
+		String result = xml
+				.substring((beginIndex + key.length() + 2), endIndex);
 		return result;
 	}
 
 	public String searchSingleValue(String key, int start) {
 
-		final int beginIndex = xml.indexOf("<" + key + ">", start);
-		final int endIndex = xml.indexOf("</" + key + ">", start);
+		int beginIndex = xml.indexOf("<" + key + ">", start);
+		int endIndex = xml.indexOf("</" + key + ">", start);
+		if(beginIndex == -1){
+			return null;
+		}
 		// System.out.println(xml.substring((beginIndex + key.length() +
 		// 2),endIndex));
-		final String result = xml.substring((beginIndex + key.length() + 2),
-				endIndex);
+		String result = xml
+				.substring((beginIndex + key.length() + 2), endIndex);
 		return result;
 	}
 
-	public String searchMultiValues(final String key) {
+	public String searchMultiValues(String key) {
 
 		int start = 0;
 		String result = "";
-		final Pattern p = Pattern.compile("<" + key + ">");
-		final Matcher m = p.matcher(xml);
+		Pattern p = Pattern.compile("<" + key + ">");
+		Matcher m = p.matcher(xml);
 		while (m.find(start)) {
 			start = m.end();
 			result += xml.substring(start, xml.indexOf("</", start)) + ",";
