@@ -93,7 +93,10 @@ public class PostgreSQL implements IDatabase {
 		try {
 			result = st.executeQuery("SELECT * FROM bookshelf where ISBN13 ='"
 					+ ISBN + "';");
-			if (!result.toString().isEmpty()) {
+			result.next();
+			String resultstr = result.getString(result.findColumn("isbn13"));
+			int index = resultstr.indexOf(ISBN);
+			if (index != -1) {
 				st.execute("DELETE FROM bookshelf where id =(select min(id) from bookshelf where isbn13 ='"
 						+ ISBN + "' AND status = true);");
 			} else {
@@ -101,7 +104,9 @@ public class PostgreSQL implements IDatabase {
 			}
 			return true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
+			System.err
+					.println("\nエラーが発生し、削除できませんでした。\n検索をして本がデータベースに登録してあるか確認してください。");
 			return false;
 		}
 	}
@@ -119,12 +124,15 @@ public class PostgreSQL implements IDatabase {
 		// select * from bookshelf where id =(select min(id) from bookshelf
 		// where status = true AND isbn13 = 'ISBN');
 
-		sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
-		sql += ISBN;
-		sql += "');";
 		try {
-			st.execute(sql);
-			return true;
+			sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
+			sql += ISBN;
+			sql += "');";
+			if (st.executeUpdate(sql) == 1) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -134,12 +142,15 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public boolean rBook(String ISBN) {
 
-		sql = "update bookshelf set status=true where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
-		sql += ISBN;
-		sql += "');";
 		try {
-			st.execute(sql);
-			return true;
+			sql = "update bookshelf set status=true where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
+			sql += ISBN;
+			sql += "');";
+			if (st.executeUpdate(sql) == 1) {
+				return true;
+			} else {
+				return false;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

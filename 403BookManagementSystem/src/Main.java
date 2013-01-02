@@ -31,6 +31,9 @@ public class Main {
 		case "inf":
 			inf();
 			break;
+		case "r,":
+		case "rn":
+			System.out.println("rm?");
 		case "rm":
 		case "remove":
 			remove(sc.next());
@@ -54,6 +57,8 @@ public class Main {
 		case ";s":
 		case "ks":
 			System.out.println("ls?");
+		case "l":
+		case "ll":
 		case "ls":
 		case "list":
 			list();
@@ -75,7 +80,7 @@ public class Main {
 			exit();
 			break;
 		default:
-			System.out.println("認識できないコマンド: " + input);
+			System.out.println("認識・修正できないコマンドです: " + input);
 			break;
 		}
 	}
@@ -83,9 +88,9 @@ public class Main {
 	private void add(String isbn) {
 
 		if (psql.addBook(isbn)) {
-			System.out.println("Added.");
+			System.out.println("追加されました。");
 		} else {
-			System.err.println("Error.Add failed.");
+			System.err.println("エラーが発生しました。追加できませんでした。");
 		}
 
 	}
@@ -107,9 +112,9 @@ public class Main {
 	private void remove(String isbn) {
 
 		if (psql.rmBook(isbn)) {
-			System.out.println("Removed.");
+			System.out.println("削除されました。");
 		} else {
-			System.err.println("Error.Remove failed.");
+			System.err.println("エラーが発生しました。削除されませんでした。");
 		}
 
 	}
@@ -123,7 +128,7 @@ public class Main {
 		if (psql.bBook(isbn)) {
 			System.out.println("借りました");
 		} else {
-
+			System.out.println("借りられませんでした。");
 		}
 
 	}
@@ -133,7 +138,7 @@ public class Main {
 		if (psql.rBook(isbn)) {
 			System.out.println("返しました");
 		} else {
-
+			System.out.println("返せませんでした");
 		}
 
 	}
