@@ -88,7 +88,7 @@ public class Main {
 	private void add(String isbn) {
 
 		if (psql.addBook(isbn)) {
-			System.out.println("追加されました。");
+			
 		} else {
 			System.err.println("エラーが発生しました。追加できませんでした。");
 		}
@@ -170,24 +170,15 @@ public class Main {
 
 		clear();
 		System.out.println("---403BMS Help Page---");
-		System.out.println("add [IBSN]     :本を追加します");
-		System.out.println("inf            :本を連続で追加します");
-		System.out.println("rm [ISBN]      :本を削除します");
-		System.out.println("remove [ISBN]  ");
-		System.out.println("b [ISBN]       :本を借ります");
-		System.out.println("borrow [ISBN]");
-		System.out.println("r [ISBN]       :本を返します");
-		System.out.println("return [ISBN]");
-		System.out.println("ls             :データベースの内容を表示します");
-		System.out.println("list");
-		System.out.println("s              :貸出中の書籍の一覧を表示します");
-		System.out.println("status");
-		System.out.println("h              :このヘルプを表示します");
-		System.out.println("help");
-		System.out.println("cls            :画面をクリアします");
-		System.out.println("clear");
-		System.out.println("q              :管理システムを終了します");
-		System.out.println("exit");
+		System.out.println("add [IBSN]     :本を追加します       \tls             :データベースの内容を表示します");
+		System.out.println("inf            :本を連続で追加します  \tlist");
+		System.out.println("rm [ISBN]      :本を削除します       \ts              :貸出中の書籍の一覧を表示します");
+		System.out.println("remove [ISBN]                     \tstatus");
+		System.out.println("b [ISBN]       :本を借ります         \th              :このヘルプを表示します");
+		System.out.println("borrow [ISBN]                     \thelp");
+		System.out.println("r [ISBN]       :本を返します         \tcls            :画面をクリアします");
+		System.out.println("return [ISBN]                     \tclear");
+		System.out.println("q                                 \texit           :管理システムを終了します \t");
 
 	}
 

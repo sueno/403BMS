@@ -78,7 +78,7 @@ public class PostgreSQL implements IDatabase {
 					+ ",'"
 					+ year
 					+ "');";
-			System.out.print("New ");
+			System.out.print("新規: " + b.getTitle() + "が追加されました");
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
@@ -169,7 +169,6 @@ public class PostgreSQL implements IDatabase {
 		int bookcount = 0;
 		String title;
 		String jaStatus;
-		String author;
 		sql = "select * from bookshelf;";
 		try {
 			result = st.executeQuery(sql);
@@ -180,28 +179,8 @@ public class PostgreSQL implements IDatabase {
 				} else {
 					jaStatus = "貸出中";
 				}
-				// 文字数整形
-				author = result.getString(result.findColumn("author"));
-				if (author.length() > 10) {
-					author = author.substring(0, 10) + "...";
-				} else {
-					for (int i = 0; (author.length() + i) != 20; i++) {
-						author += " ";
-					}
-				}
 				title = result.getString(result.findColumn("title"));
-				if (title.length() > 20) {
-					title = title.substring(0, 20) + "...";
-				} else {
-					for (int i = 0; (title.length() + i) != 20; i++) {
-						title += " ";
-					}
-				}
-				System.out.println(title + " \t| " + author + " \t| "
-						+ jaStatus + " \t| "
-						+ result.getString(result.findColumn("isbn13")) + " | "
-						+ "画像URL: "
-						+ result.getString(result.findColumn("picturl")));
+				System.out.println(title + "\t\t[" + jaStatus + "]");
 				bookcount++;
 			}
 			System.out.println("結果:" + bookcount + "冊");
