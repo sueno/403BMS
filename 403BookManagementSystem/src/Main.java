@@ -15,9 +15,7 @@ public class Main {
 	}
 
 	public void initialize() {
-
 		psql = new PostgreSQL();
-		psql.addLog("起動中...");
 	}
 
 	private void modeChanger() {
@@ -82,7 +80,6 @@ public class Main {
 			break;
 		default:
 			System.out.println("認識・修正できないコマンドです: " + input);
-			psql.addLog("認識できないコマンドが入力されました: " + input);
 			break;
 		}
 	}
@@ -163,7 +160,6 @@ public class Main {
 	}
 
 	private void exit() {
-		psql.addLog("終了");
 		System.exit(0);
 	}
 

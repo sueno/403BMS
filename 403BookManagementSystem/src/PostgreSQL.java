@@ -3,9 +3,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Scanner;
 
 public class PostgreSQL implements IDatabase {
@@ -32,36 +29,23 @@ public class PostgreSQL implements IDatabase {
 		try {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
-			addLog("データベースの接続に成功");
 			init();
 		} catch (SQLException e) {
 			System.out
 					.println("データベースへの接続が失敗しました。PostgreSQLが起動しているかどうか確認してください。");
 			System.out.println("psql -U postgres が実行できるか確認してください");
-			System.out.println("qキーを入力すると終了します。dキーで直前のエラーメッセージを表示します。");
-			System.out.println("rキーで再試行できます。");
-			sc = new Scanner(System.in);
-			String input = sc.next();
-			if (input == "q") {
-				System.exit(0);
-			} else if (input == "d") {
-				e.printStackTrace();
-			} else if (input == "r") {
-				Main m = new Main();
-				m.initialize();
-			}
 		}
 	}
 
-	private void init() {
+	private void init() throws SQLException{
 
 		amzn = new AmazonSearch();
-		addLog("AmazonSearch初期化完了");
-		sql = "SELECT * FROM bookshel;";
+		sql = "SELECT * FROM bookshelf;";
 		try {
 			result = st.executeQuery(sql);
 		} catch (SQLException e) {
-
+			sql = "create table bookshelf(id SERIAL,title varchar(1000),author varchar(1000),isbn10 varchar(20),isbn13 varchar(20),picturl varchar(1000),detailurl varchar(1000),publisher varchar(1000),publicationdate varchar(50),status boolean,year varchar(10));";
+			st.execute(sql);
 		}
 	}
 
@@ -106,12 +90,11 @@ public class PostgreSQL implements IDatabase {
 					+ ",'"
 					+ year
 					+ "');";
-			System.out.print(b.getTitle() + "が追加されました");
-			addLog("次の本が追加されました。" + ISBN);
+			System.out.println(sql);
 			st.execute(sql);
+			System.out.println(b.getTitle() + "が追加されました");
 			return true;
 		} catch (SQLException e) {
-			addLog("本を追加できませんでした。" + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -130,16 +113,13 @@ public class PostgreSQL implements IDatabase {
 				st.execute("DELETE FROM bookshelf where id =(select min(id) from bookshelf where isbn13 ='"
 						+ ISBN + "' AND status = true);");
 			} else {
-				addLog("本を削除できませんでした。本が存在しません。");
 				return false;
 			}
-			addLog("本を削除しました。");
 			return true;
 		} catch (SQLException e) {
 			// e.printStackTrace();
 			System.err
 					.println("\nエラーが発生し、削除できませんでした。\n検索をして本がデータベースに登録してあるか確認してください。");
-			addLog("本が削除できませんでした。" + e.toString());
 			return false;
 		}
 	}
@@ -162,14 +142,11 @@ public class PostgreSQL implements IDatabase {
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
-				addLog(ISBN + " のステータスを貸出中に変更しました。");
 				return true;
 			} else {
-				addLog(ISBN + " を借りられませんでした。すでに借りられているか、本が存在しません。");
 				return false;
 			}
 		} catch (SQLException e) {
-			addLog("SQL文実行中にエラーが発生しました。 " + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -183,13 +160,11 @@ public class PostgreSQL implements IDatabase {
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
-				addLog(ISBN + " のステータスを貸出可に変更しました。");
 				return true;
 			} else {
 				return false;
 			}
 		} catch (SQLException e) {
-			addLog("SQL文実行中にエラーが発生しました。 " + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -292,21 +267,5 @@ public class PostgreSQL implements IDatabase {
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	public void addLog(String logmessage) {
-
-		Date d = new Date();
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS");
-		sql = "insert into logtable (message) values(";
-		sql += "'";
-		sql += "[" + df.format(d) + "]" + "  " + logmessage;
-		sql += "'";
-		sql += ");";
-		try {
-			st.execute(sql);
-		} catch (SQLException e) {
-
-		}
 	}
 }
