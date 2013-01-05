@@ -10,6 +10,8 @@ import java.util.Scanner;
 
 public class PostgreSQL implements IDatabase {
 
+	Scanner			sc		= null;
+
 	Connection		db		= null;
 	Statement		st		= null;
 	ResultSet		result	= null;
@@ -38,7 +40,7 @@ public class PostgreSQL implements IDatabase {
 			System.out.println("psql -U postgres が実行できるか確認してください");
 			System.out.println("qキーを入力すると終了します。dキーで直前のエラーメッセージを表示します。");
 			System.out.println("rキーで再試行できます。");
-			Scanner sc = new Scanner(System.in);
+			sc = new Scanner(System.in);
 			String input = sc.next();
 			if (input == "q") {
 				System.exit(0);
