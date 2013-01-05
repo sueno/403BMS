@@ -14,7 +14,7 @@ public class Main {
 		}
 	}
 
-	private void initialize() {
+	public void initialize() {
 
 		psql = new PostgreSQL();
 		psql.addLog("起動中...");

@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Scanner;
 
 public class PostgreSQL implements IDatabase {
 
@@ -32,7 +33,21 @@ public class PostgreSQL implements IDatabase {
 			addLog("データベースの接続に成功");
 			init();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			System.out
+					.println("データベースへの接続が失敗しました。PostgreSQLが起動しているかどうか確認してください。");
+			System.out.println("psql -U postgres が実行できるか確認してください");
+			System.out.println("qキーを入力すると終了します。dキーで直前のエラーメッセージを表示します。");
+			System.out.println("rキーで再試行できます。");
+			Scanner sc = new Scanner(System.in);
+			String input = sc.next();
+			if (input == "q") {
+				System.exit(0);
+			} else if (input == "d") {
+				e.printStackTrace();
+			} else if (input == "r") {
+				Main m = new Main();
+				m.initialize();
+			}
 		}
 	}
 
@@ -40,6 +55,12 @@ public class PostgreSQL implements IDatabase {
 
 		amzn = new AmazonSearch();
 		addLog("AmazonSearch初期化完了");
+		sql = "SELECT * FROM bookshel;";
+		try {
+			result = st.executeQuery(sql);
+		} catch (SQLException e) {
+
+		}
 	}
 
 	@Override
