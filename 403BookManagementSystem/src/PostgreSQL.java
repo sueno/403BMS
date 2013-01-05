@@ -33,7 +33,7 @@ public class PostgreSQL implements IDatabase {
 		} catch (SQLException e) {
 			System.out
 					.println("データベースへの接続が失敗しました。PostgreSQLが起動しているかどうか確認してください。");
-			System.out.println("psql -U postgres が実行できるか確認してください");
+			System.out.println("psql -U postgres または、psql -h localhost -U postgresが実行できるか確認してください。");
 		}
 	}
 
