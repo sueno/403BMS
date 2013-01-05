@@ -146,7 +146,6 @@ public class Main {
 	}
 
 	private void search(String isbn) {
-
 		psql.searchDB(isbn);
 
 	}

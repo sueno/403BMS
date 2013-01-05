@@ -54,6 +54,7 @@ public class XMLTextProc {
 			start = m.end();
 			result += xml.substring(start, xml.indexOf("</", start)) + ",";
 		}
+		result = result.substring(0, result.length() - 1);
 		return result;
 	}
 }

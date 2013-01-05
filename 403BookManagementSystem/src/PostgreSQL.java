@@ -25,7 +25,7 @@ public class PostgreSQL implements IDatabase {
 	 */
 
 	public PostgreSQL() {
-		
+
 		try {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
@@ -175,6 +175,45 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String[] searchDB(String key) {
 
+		Book b;
+		int bookcount = 0;
+		try {
+			sql = "SELECT * FROM bookshelf where isbn13 ='";
+			sql += key;
+			sql += "';";
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				bookcount++;
+			}
+			if (bookcount != 0) {
+				System.out.println("データベース上に " + bookcount + "件 の登録あり");
+				bookcount = 0;
+				sql = "SELECT * FROM bookshelf where isbn13 ='";
+				sql += key;
+				sql += "AND status = true";
+				sql += "';";
+				result = st.executeQuery(sql);
+				while (result.next()) {
+					bookcount++;
+				}
+				if (bookcount != 0) {
+					System.out.println(bookcount + "冊 貸し出し可能");
+				} else {
+					System.out.println("***すべて貸出中です***");
+				}
+			} else {
+				System.out.println("この本はデータベースに登録されていません");
+			}
+
+			b = amzn.getBookInfoISBN(key);
+			System.out.println("タイトル: " + b.getTitle());
+			System.out.println("著者: " + b.getAuthor());
+			System.out.println("詳細URL: " + b.getDetailURL());
+			System.out.println("出版日時: " + b.getPublicationDate());
+			System.out.println("出版社: " + b.getPublisher());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
