@@ -163,7 +163,7 @@ public class Main {
 	}
 
 	private void exit() {
-
+		psql.addLog("終了");
 		System.exit(0);
 	}
 

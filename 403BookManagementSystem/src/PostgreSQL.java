@@ -190,8 +190,8 @@ public class PostgreSQL implements IDatabase {
 				bookcount = 0;
 				sql = "SELECT * FROM bookshelf where isbn13 ='";
 				sql += key;
-				sql += "AND status = true";
-				sql += "';";
+				sql += "' AND status = true";
+				sql += ";";
 				result = st.executeQuery(sql);
 				while (result.next()) {
 					bookcount++;
@@ -206,11 +206,13 @@ public class PostgreSQL implements IDatabase {
 			}
 
 			b = amzn.getBookInfoISBN(key);
-			System.out.println("タイトル: " + b.getTitle());
-			System.out.println("著者: " + b.getAuthor());
-			System.out.println("詳細URL: " + b.getDetailURL());
-			System.out.println("出版日時: " + b.getPublicationDate());
-			System.out.println("出版社: " + b.getPublisher());
+			System.out.println();
+			System.out.println("タイトル\t: " + b.getTitle());
+			System.out.println("著者\t: " + b.getAuthor());
+			System.out.println("詳細URL\t: " + b.getDetailURL());
+			System.out.println("出版日時\t: " + b.getPublicationDate());
+			System.out.println("出版社\t: " + b.getPublisher());
+			System.out.println();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
