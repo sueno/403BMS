@@ -13,7 +13,7 @@ import com.rosaloves.bitlyj.Bitly;
 class AmazonSearch {
 
 	private String getBookXML(String str) {
-
+		
 		Map<String, String> keyMap = new HashMap<String, String>();
 		keyMap.put("AWSAccessKeyId", "AKIAIWAIBB22KSIA35AQ");
 		keyMap.put("AssociateTag", "nokok-22");
@@ -66,13 +66,12 @@ class AmazonSearch {
 						.call(shorten(beforeUrlDetail)).getShortUrl();
 				b.setPictURL(picUrl);
 				b.setDetailURL(detailUrl);
+				b.setPublicationDate(xml.searchSingleValue("PublicationDate"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			b.setPublicationDate(xml.searchSingleValue("PublicationDate"));
-			// b.setYear(xml.searchSingleValue(""));
 		} else {
-			System.out.println("本が見つかりませんでした");
+			
 		}
 		return b;
 	}

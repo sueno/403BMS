@@ -17,6 +17,7 @@ public class Main {
 	private void initialize() {
 
 		psql = new PostgreSQL();
+		psql.addLog("起動中...");
 	}
 
 	private void modeChanger() {
@@ -81,6 +82,7 @@ public class Main {
 			break;
 		default:
 			System.out.println("認識・修正できないコマンドです: " + input);
+			psql.addLog("認識できないコマンドが入力されました: " + input);
 			break;
 		}
 	}
@@ -88,7 +90,7 @@ public class Main {
 	private void add(String isbn) {
 
 		if (psql.addBook(isbn)) {
-			
+
 		} else {
 			System.err.println("エラーが発生しました。追加できませんでした。");
 		}
@@ -170,15 +172,20 @@ public class Main {
 
 		clear();
 		System.out.println("---403BMS Help Page---");
-		System.out.println("add [IBSN]     :本を追加します       \tls             :データベースの内容を表示します");
+		System.out
+				.println("add [IBSN]     :本を追加します       \tls             :データベースの内容を表示します");
 		System.out.println("inf            :本を連続で追加します  \tlist");
-		System.out.println("rm [ISBN]      :本を削除します       \ts              :貸出中の書籍の一覧を表示します");
+		System.out
+				.println("rm [ISBN]      :本を削除します       \ts              :貸出中の書籍の一覧を表示します");
 		System.out.println("remove [ISBN]                     \tstatus");
-		System.out.println("b [ISBN]       :本を借ります         \th              :このヘルプを表示します");
+		System.out
+				.println("b [ISBN]       :本を借ります         \th              :このヘルプを表示します");
 		System.out.println("borrow [ISBN]                     \thelp");
-		System.out.println("r [ISBN]       :本を返します         \tcls            :画面をクリアします");
+		System.out
+				.println("r [ISBN]       :本を返します         \tcls            :画面をクリアします");
 		System.out.println("return [ISBN]                     \tclear");
-		System.out.println("q                                 \texit           :管理システムを終了します \t");
+		System.out
+				.println("q                                 \texit           :管理システムを終了します \t");
 
 	}
 

@@ -3,6 +3,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class PostgreSQL implements IDatabase {
 
@@ -22,11 +25,12 @@ public class PostgreSQL implements IDatabase {
 	 */
 
 	public PostgreSQL() {
-
-		init();
+		
 		try {
 			db = DriverManager.getConnection(url, "postgres", "");
 			st = db.createStatement();
+			addLog("データベースの接続に成功");
+			init();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -35,6 +39,7 @@ public class PostgreSQL implements IDatabase {
 	private void init() {
 
 		amzn = new AmazonSearch();
+		addLog("AmazonSearch初期化完了");
 	}
 
 	@Override
@@ -78,10 +83,12 @@ public class PostgreSQL implements IDatabase {
 					+ ",'"
 					+ year
 					+ "');";
-			System.out.print("新規: " + b.getTitle() + "が追加されました");
+			System.out.print(b.getTitle() + "が追加されました");
+			addLog("次の本が追加されました。" + ISBN);
 			st.execute(sql);
 			return true;
 		} catch (SQLException e) {
+			addLog("本を追加できませんでした。" + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -100,13 +107,16 @@ public class PostgreSQL implements IDatabase {
 				st.execute("DELETE FROM bookshelf where id =(select min(id) from bookshelf where isbn13 ='"
 						+ ISBN + "' AND status = true);");
 			} else {
+				addLog("本を削除できませんでした。本が存在しません。");
 				return false;
 			}
+			addLog("本を削除しました。");
 			return true;
 		} catch (SQLException e) {
 			// e.printStackTrace();
 			System.err
 					.println("\nエラーが発生し、削除できませんでした。\n検索をして本がデータベースに登録してあるか確認してください。");
+			addLog("本が削除できませんでした。" + e.toString());
 			return false;
 		}
 	}
@@ -129,11 +139,14 @@ public class PostgreSQL implements IDatabase {
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
+				addLog(ISBN + " のステータスを貸出中に変更しました。");
 				return true;
 			} else {
+				addLog(ISBN + " を借りられませんでした。すでに借りられているか、本が存在しません。");
 				return false;
 			}
 		} catch (SQLException e) {
+			addLog("SQL文実行中にエラーが発生しました。 " + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -147,11 +160,13 @@ public class PostgreSQL implements IDatabase {
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
+				addLog(ISBN + " のステータスを貸出可に変更しました。");
 				return true;
 			} else {
 				return false;
 			}
 		} catch (SQLException e) {
+			addLog("SQL文実行中にエラーが発生しました。 " + e.toString());
 			e.printStackTrace();
 			return false;
 		}
@@ -213,5 +228,21 @@ public class PostgreSQL implements IDatabase {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void addLog(String logmessage) {
+
+		Date d = new Date();
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss.SSS");
+		sql = "insert into logtable (message) values(";
+		sql += "'";
+		sql += "[" + df.format(d) + "]" + "  " + logmessage;
+		sql += "'";
+		sql += ");";
+		try {
+			st.execute(sql);
+		} catch (SQLException e) {
+
+		}
 	}
 }
