@@ -2,12 +2,12 @@ public class Book {
 
 	private String	author;
 	private String	bookID;
+	private String	detailURL;
 	private String	ISBN10;
 	private String	ISBN13;
 	private String	pictURL;
-	private String	detailURL;
-	private String	publisher;
 	private String	publicationDate;
+	private String	publisher;
 	private boolean	status	= true;
 	private String	title;
 	private String	year;
@@ -20,6 +20,11 @@ public class Book {
 	public String getBookID(String key) {
 
 		return bookID;
+	}
+
+	public String getDetailURL() {
+
+		return detailURL;
 	}
 
 	public String getISBN10() {
@@ -35,6 +40,11 @@ public class Book {
 	public String getPictURL() {
 
 		return pictURL;
+	}
+
+	public String getPublicationDate() {
+
+		return publicationDate;
 	}
 
 	public String getPublisher() {
@@ -67,6 +77,11 @@ public class Book {
 		this.bookID = bookID;
 	}
 
+	public void setDetailURL(String detailURL) {
+
+		this.detailURL = detailURL;
+	}
+
 	public void setISBN10(String iSBN10) {
 
 		ISBN10 = iSBN10;
@@ -80,6 +95,11 @@ public class Book {
 	public void setPictURL(String pictURL) {
 
 		this.pictURL = pictURL;
+	}
+
+	public void setPublicationDate(String publicationDate) {
+
+		this.publicationDate = publicationDate;
 	}
 
 	public void setPublisher(String publisher) {
@@ -100,26 +120,6 @@ public class Book {
 	public void setYear(String year) {
 
 		this.year = year;
-	}
-
-	public String getDetailURL() {
-
-		return detailURL;
-	}
-
-	public void setDetailURL(String detailURL) {
-
-		this.detailURL = detailURL;
-	}
-
-	public String getPublicationDate() {
-
-		return publicationDate;
-	}
-
-	public void setPublicationDate(String publicationDate) {
-
-		this.publicationDate = publicationDate;
 	}
 
 }

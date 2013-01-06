@@ -18,6 +18,20 @@ public class XMLTextProc {
 		return false;
 	}
 
+	public String searchMultiValues(String key) {
+
+		int start = 0;
+		String result = "";
+		Pattern p = Pattern.compile("<" + key + ">");
+		Matcher m = p.matcher(xml);
+		while (m.find(start)) {
+			start = m.end();
+			result += xml.substring(start, xml.indexOf("</", start)) + ",";
+		}
+		result = result.substring(0, result.length() - 1);
+		return result;
+	}
+
 	public String searchSingleValue(String key) {
 
 		int beginIndex = xml.indexOf("<" + key + ">");
@@ -41,20 +55,6 @@ public class XMLTextProc {
 		// 2),endIndex));
 		String result = xml
 				.substring((beginIndex + key.length() + 2), endIndex);
-		return result;
-	}
-
-	public String searchMultiValues(String key) {
-
-		int start = 0;
-		String result = "";
-		Pattern p = Pattern.compile("<" + key + ">");
-		Matcher m = p.matcher(xml);
-		while (m.find(start)) {
-			start = m.end();
-			result += xml.substring(start, xml.indexOf("</", start)) + ",";
-		}
-		result = result.substring(0, result.length() - 1);
 		return result;
 	}
 }

@@ -17,13 +17,9 @@ public class PostgreSQL implements IDatabase {
 	Statement		st		= null;
 	String			url		= "jdbc:postgresql:postgres";
 
-	/*
-	 * CREATE TABLE bookshelf( id SERIAL, title varchar(1000), author
-	 * varchar(1000), isbn10 varchar(20), isbn13 varchar(20), picturl
-	 * varchar(1000), detailurl varchar(1000), publisher varchar(1000),
-	 * publicationdate varchar(50), status boolean, year varchar(10));
+	/**
+	 * PostgreSQLに接続・初期化します。 ISBNを元にAmazonからデータを取得します
 	 */
-
 	public PostgreSQL() {
 
 		try {
@@ -38,6 +34,14 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
+	/**
+	 * ISBNを元に本をデータベースに追加します。
+	 * 
+	 * @see IDatabase#addBook(java.lang.String)
+	 * @param ISBN
+	 *            13桁のISBN
+	 * @return true 正常に追加完了,false 異常発生
+	 */
 	@Override
 	public boolean addBook(String ISBN) {
 
@@ -88,6 +92,12 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
+	/**
+	 * データベースにユーザーを登録します。
+	 * 
+	 * @param userName
+	 *            ユーザー名
+	 */
 	public void addUser(String userName) {
 
 		sql = "SELECT * FROM usertable where username='" + userName + "';";
@@ -106,12 +116,16 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
-	/*
-	 * (非 Javadoc)
+	/**
+	 * 本を借りる処理を行います
 	 * 
 	 * @see IDatabase#bBook(java.lang.String, java.lang.String)
+	 * @param ISBN
+	 *            13桁のISBN
+	 * @param userName
+	 *            ユーザー名
+	 * @return true 正常終了,false 異常終了
 	 */
-	@Override
 	public boolean bBook(String ISBN, String userName) {
 
 		try {
@@ -157,7 +171,11 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
-	@Override
+	/**
+	 * データベース一覧を表示します
+	 * 
+	 * @see IDatabase#listDB()
+	 */
 	public String listDB() {
 
 		int bookcount = 0;
@@ -185,7 +203,16 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
-	@Override
+	/**
+	 * 本を返却します
+	 * 
+	 * @see IDatabase#rBook(java.lang.String, java.lang.String)
+	 * @param ISBN
+	 *            13桁のISBN
+	 * @param userName
+	 *            ユーザー名
+	 * @return true 正常終了,false 異常終了
+	 */
 	public boolean rBook(String ISBN, String userName) {
 
 		try {
@@ -221,7 +248,13 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
-	@Override
+	/**
+	 * 本を削除します
+	 * 
+	 * @param ISBN
+	 *            13桁のISBN
+	 * @return true 正常終了,false 異常終了
+	 */
 	public boolean rmBook(String ISBN) {
 
 		try {

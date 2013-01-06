@@ -18,19 +18,19 @@ import org.apache.commons.codec.binary.Base64;
 
 public class SignedRequestsHelper {
 
-	private static final String	UTF8_CHARSET			= "UTF-8";
 	private static final String	HMAC_SHA256_ALGORITHM	= "HmacSHA256";
-	private static final String	REQUEST_URI				= "/onca/xml";
 	private static final String	REQUEST_METHOD			= "GET";
+	private static final String	REQUEST_URI				= "/onca/xml";
+	private static final String	UTF8_CHARSET			= "UTF-8";
 
-	private final String		endpoint				= "ecs.amazonaws.jp";							// must
-																										// be
+	// be
 																										// lowercase
 	private final String		awsAccessKeyId			= "AKIAIWAIBB22KSIA35AQ";
-	private final String		awsSecretKey			= "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";
+																										private final String		awsSecretKey			= "9h7f1MiYvNKKL9BXdGhvXFE6thUk6Hg1T7JJN8/n";
+	private final String		endpoint				= "ecs.amazonaws.jp";							// must
 
-	private SecretKeySpec		secretKeySpec			= null;
 	private Mac					mac						= null;
+	private SecretKeySpec		secretKeySpec			= null;
 
 	public SignedRequestsHelper() {
 
@@ -66,32 +66,6 @@ public class SignedRequestsHelper {
 		return url;
 	}
 
-	private String hmac(String stringToSign) {
-
-		String signature = null;
-		byte[] data;
-		byte[] rawHmac;
-		try {
-			data = stringToSign.getBytes(UTF8_CHARSET);
-			rawHmac = mac.doFinal(data);
-			final Base64 encoder = new Base64();
-			signature = new String(encoder.encode(rawHmac));
-		} catch (final UnsupportedEncodingException e) {
-			throw new RuntimeException(UTF8_CHARSET + " is unsupported!", e);
-		}
-		return signature;
-	}
-
-	private String timestamp() {
-
-		String timestamp = null;
-		final Calendar cal = Calendar.getInstance();
-		final DateFormat dfm = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		dfm.setTimeZone(TimeZone.getTimeZone("GMT"));
-		timestamp = dfm.format(cal.getTime());
-		return timestamp;
-	}
-
 	private String canonicalize(SortedMap<String, String> sortedParamMap) {
 
 		if (sortedParamMap.isEmpty()) {
@@ -115,6 +89,22 @@ public class SignedRequestsHelper {
 		return cannoical;
 	}
 
+	private String hmac(String stringToSign) {
+
+		String signature = null;
+		byte[] data;
+		byte[] rawHmac;
+		try {
+			data = stringToSign.getBytes(UTF8_CHARSET);
+			rawHmac = mac.doFinal(data);
+			final Base64 encoder = new Base64();
+			signature = new String(encoder.encode(rawHmac));
+		} catch (final UnsupportedEncodingException e) {
+			throw new RuntimeException(UTF8_CHARSET + " is unsupported!", e);
+		}
+		return signature;
+	}
+
 	private String percentEncodeRfc3986(String s) {
 
 		String out;
@@ -125,5 +115,15 @@ public class SignedRequestsHelper {
 			out = s;
 		}
 		return out;
+	}
+
+	private String timestamp() {
+
+		String timestamp = null;
+		final Calendar cal = Calendar.getInstance();
+		final DateFormat dfm = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+		dfm.setTimeZone(TimeZone.getTimeZone("GMT"));
+		timestamp = dfm.format(cal.getTime());
+		return timestamp;
 	}
 }

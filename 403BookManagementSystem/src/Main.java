@@ -1,9 +1,10 @@
 import java.util.Scanner;
 
+/**
+ * @author noko
+ * @version 1.0
+ */
 public class Main {
-
-	PostgreSQL	psql;
-	Scanner		sc;
 
 	public static void main(String[] args) {
 
@@ -13,10 +14,88 @@ public class Main {
 			m.modeChanger();
 		}
 	}
+	PostgreSQL	psql;
 
-	public void initialize() {
+	Scanner		sc;
+
+	private void add(String isbn) {
+
+		if (psql.addBook(isbn)) {
+
+		} else {
+			System.err.println("エラーが発生しました。追加できませんでした。");
+		}
+
+	}
+
+	private void borrowbook(String isbn, String userID) {
+
+		if (psql.bBook(isbn, userID)) {
+			System.out.println("借りました");
+		} else {
+			System.out.println("借りられませんでした。");
+		}
+
+	}
+
+	private void clear() {
+
+		for (int i = 0; i < 300; i++) {
+			System.out.println();
+		}
+	}
+
+	private void exit() {
+
+		System.exit(0);
+	}
+
+	private void help() {
+
+		clear();
+		System.out.println("---403BMS Help Page---");
+		System.out.println("adduser [username] \t:ユーザーを追加します");
+		System.out.println("rmuser [username]  \t:ユーザーを削除します");
+		System.out
+				.println("add [IBSN]     :本を追加します       \t | ls             :データベースの内容を表示します");
+		System.out.println("inf            :本を連続で追加します  \t | list");
+		System.out
+				.println("rm [ISBN]      :本を削除します       \t | s              :貸出中の書籍の一覧を表示します");
+		System.out.println("remove [ISBN]                     \t | status");
+		System.out
+				.println("b [ISBN]       :本を借ります         \t | h              :このヘルプを表示します");
+		System.out.println("borrow [ISBN]                     \t | help");
+		System.out
+				.println("r [ISBN]       :本を返します         \t | cls            :画面をクリアします");
+		System.out.println("return [ISBN]                     \t | clear");
+		System.out
+				.println("q                                 \t | exit           :管理システムを終了します \t");
+
+	}
+
+	private void inf() {
+
+		System.out.println("---inf mode---(quit:q)");
+		while (true) {
+			String input = sc.next();
+			if (input.equals("q")) {
+				break;
+			} else {
+				add(input);
+			}
+
+		}
+	}
+
+	private void initialize() {
 
 		psql = new PostgreSQL();
+	}
+
+	private void list() {
+
+		psql.listDB();
+
 	}
 
 	private void modeChanger() {
@@ -99,30 +178,6 @@ public class Main {
 		}
 	}
 
-	private void add(String isbn) {
-
-		if (psql.addBook(isbn)) {
-
-		} else {
-			System.err.println("エラーが発生しました。追加できませんでした。");
-		}
-
-	}
-
-	private void inf() {
-
-		System.out.println("---inf mode---(quit:q)");
-		while (true) {
-			String input = sc.next();
-			if (input.equals("q")) {
-				break;
-			} else {
-				add(input);
-			}
-
-		}
-	}
-
 	private void remove(String isbn) {
 
 		if (psql.rmBook(isbn)) {
@@ -134,22 +189,12 @@ public class Main {
 	}
 
 	private void removelist(String[] isbn) {
-		
-	}
-
-	private void borrowbook(String isbn, String userID) {
-
-		if (psql.bBook(isbn,userID)) {
-			System.out.println("借りました");
-		} else {
-			System.out.println("借りられませんでした。");
-		}
 
 	}
 
 	private void returnbook(String isbn, String userID) {
 
-		if (psql.rBook(isbn,userID)) {
+		if (psql.rBook(isbn, userID)) {
 			System.out.println("返しました");
 		} else {
 			System.out.println("返せませんでした");
@@ -163,48 +208,9 @@ public class Main {
 
 	}
 
-	private void list() {
-
-		psql.listDB();
-
-	}
-
 	private void status() {
 
 		psql.showStatus(0);
 
-	}
-
-	private void exit() {
-
-		System.exit(0);
-	}
-
-	private void help() {
-
-		clear();
-		System.out.println("---403BMS Help Page---");
-		System.out
-				.println("add [IBSN]     :本を追加します       \t | ls             :データベースの内容を表示します");
-		System.out.println("inf            :本を連続で追加します  \t | list");
-		System.out
-				.println("rm [ISBN]      :本を削除します       \t | s              :貸出中の書籍の一覧を表示します");
-		System.out.println("remove [ISBN]                     \t | status");
-		System.out
-				.println("b [ISBN]       :本を借ります         \t | h              :このヘルプを表示します");
-		System.out.println("borrow [ISBN]                     \t | help");
-		System.out
-				.println("r [ISBN]       :本を返します         \t | cls            :画面をクリアします");
-		System.out.println("return [ISBN]                     \t | clear");
-		System.out
-				.println("q                                 \t | exit           :管理システムを終了します \t");
-
-	}
-
-	private void clear() {
-
-		for (int i = 0; i < 300; i++) {
-			System.out.println();
-		}
 	}
 }
