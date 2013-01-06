@@ -15,6 +15,7 @@ public class Main {
 	}
 
 	public void initialize() {
+
 		psql = new PostgreSQL();
 	}
 
@@ -24,6 +25,8 @@ public class Main {
 		sc = new Scanner(System.in);
 		String input = sc.next();
 		switch (input) {
+
+		// ***書籍操作系コマンド***
 		case "add":
 			add(sc.next());
 			break;
@@ -66,6 +69,18 @@ public class Main {
 		case "status":
 			status();
 			break;
+
+		// ***ユーザー操作系コマンド***
+
+		case "adduser":
+			psql.addUser(sc.next());
+			break;
+		case "rmuser":
+			psql.rmUser(sc.next());
+			break;
+
+		// ***画面操作系コマンド***
+
 		case "clear":
 		case "cls":
 			clear();
@@ -143,6 +158,7 @@ public class Main {
 	}
 
 	private void search(String isbn) {
+
 		psql.searchDB(isbn);
 
 	}
@@ -160,6 +176,7 @@ public class Main {
 	}
 
 	private void exit() {
+
 		System.exit(0);
 	}
 
@@ -168,19 +185,19 @@ public class Main {
 		clear();
 		System.out.println("---403BMS Help Page---");
 		System.out
-				.println("add [IBSN]     :本を追加します       \tls             :データベースの内容を表示します");
-		System.out.println("inf            :本を連続で追加します  \tlist");
+				.println("add [IBSN]     :本を追加します       \t | ls             :データベースの内容を表示します");
+		System.out.println("inf            :本を連続で追加します  \t | list");
 		System.out
-				.println("rm [ISBN]      :本を削除します       \ts              :貸出中の書籍の一覧を表示します");
-		System.out.println("remove [ISBN]                     \tstatus");
+				.println("rm [ISBN]      :本を削除します       \t | s              :貸出中の書籍の一覧を表示します");
+		System.out.println("remove [ISBN]                     \t | status");
 		System.out
-				.println("b [ISBN]       :本を借ります         \th              :このヘルプを表示します");
-		System.out.println("borrow [ISBN]                     \thelp");
+				.println("b [ISBN]       :本を借ります         \t | h              :このヘルプを表示します");
+		System.out.println("borrow [ISBN]                     \t | help");
 		System.out
-				.println("r [ISBN]       :本を返します         \tcls            :画面をクリアします");
-		System.out.println("return [ISBN]                     \tclear");
+				.println("r [ISBN]       :本を返します         \t | cls            :画面をクリアします");
+		System.out.println("return [ISBN]                     \t | clear");
 		System.out
-				.println("q                                 \texit           :管理システムを終了します \t");
+				.println("q                                 \t | exit           :管理システムを終了します \t");
 
 	}
 

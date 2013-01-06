@@ -18,7 +18,7 @@ public class PostgreSQL implements IDatabase {
 	AmazonSearch	amzn	= null;
 
 	/*
-	 * create table bookshelf( id SERIAL, title varchar(1000), author
+	 * CREATE TABLE bookshelf( id SERIAL, title varchar(1000), author
 	 * varchar(1000), isbn10 varchar(20), isbn13 varchar(20), picturl
 	 * varchar(1000), detailurl varchar(1000), publisher varchar(1000),
 	 * publicationdate varchar(50), status boolean, year varchar(10));
@@ -33,18 +33,23 @@ public class PostgreSQL implements IDatabase {
 		} catch (SQLException e) {
 			System.out
 					.println("データベースへの接続が失敗しました。PostgreSQLが起動しているかどうか確認してください。");
-			System.out.println("psql -U postgres または、psql -h localhost -U postgresが実行できるか確認してください。");
+			System.out
+					.println("psql -U postgres または、psql -h localhost -U postgresが実行できるか確認してください。");
 		}
 	}
 
-	private void init() throws SQLException{
+	private void init() throws SQLException {
 
 		amzn = new AmazonSearch();
 		sql = "SELECT * FROM bookshelf;";
 		try {
 			result = st.executeQuery(sql);
 		} catch (SQLException e) {
-			sql = "create table bookshelf(id SERIAL,title varchar(1000),author varchar(1000),isbn10 varchar(20),isbn13 varchar(20),picturl varchar(1000),detailurl varchar(1000),publisher varchar(1000),publicationdate varchar(50),status boolean,year varchar(10));";
+			sql = "CREATE TABLE bookshelf(id SERIAL,title varchar(1000),author varchar(1000),isbn10 varchar(20),isbn13 varchar(20),picturl varchar(1000),detailurl varchar(1000),publisher varchar(1000),publicationdate varchar(50),status boolean,year varchar(10));";
+			st.execute(sql);
+			sql = "CREATE TABLE usertable(username varchar(20));";
+			st.execute(sql);
+			sql = "CREATE TABLE userbooks(username varchar(20),isbn13 varchar(15));";
 			st.execute(sql);
 		}
 	}
@@ -69,7 +74,7 @@ public class PostgreSQL implements IDatabase {
 		}
 
 		try {
-			sql = "insert into bookshelf (title , author , isbn10 ,  isbn13 ,  picturl ,  detailurl ,  publisher ,  publicationdate ,  status ,  year ) values('"
+			sql = "INSERT INTO bookshelf (title , author , isbn10 ,  isbn13 ,  picturl ,  detailurl ,  publisher ,  publicationdate ,  status ,  year ) VALUES('"
 					+ title
 					+ "','"
 					+ author
@@ -104,13 +109,13 @@ public class PostgreSQL implements IDatabase {
 	public boolean rmBook(String ISBN) {
 
 		try {
-			result = st.executeQuery("SELECT * FROM bookshelf where ISBN13 ='"
+			result = st.executeQuery("SELECT * FROM bookshelf WHERE ISBN13 ='"
 					+ ISBN + "';");
 			result.next();
 			String resultstr = result.getString(result.findColumn("isbn13"));
 			int index = resultstr.indexOf(ISBN);
 			if (index != -1) {
-				st.execute("DELETE FROM bookshelf where id =(select min(id) from bookshelf where isbn13 ='"
+				st.execute("DELETE FROM bookshelf WHERE id =(SELECT min(id) FROM bookshelf WHERE isbn13 ='"
 						+ ISBN + "' AND status = true);");
 			} else {
 				return false;
@@ -134,11 +139,11 @@ public class PostgreSQL implements IDatabase {
 	public boolean bBook(String ISBN) {
 
 		// 借りられていない同じ本を探すSQL
-		// select * from bookshelf where id =(select min(id) from bookshelf
-		// where status = true AND isbn13 = 'ISBN');
+		// SELECT * FROM bookshelf WHERE id =(SELECT min(id) FROM bookshelf
+		// WHERE status = true AND isbn13 = 'ISBN');
 
 		try {
-			sql = "update bookshelf set status=false where id =(select min(id) from bookshelf where status = true AND isbn13 = '";
+			sql = "UPDATE bookshelf SET status=false WHERE id =(SELECT min(id) FROM bookshelf WHERE status = true AND isbn13 = '";
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
@@ -156,7 +161,7 @@ public class PostgreSQL implements IDatabase {
 	public boolean rBook(String ISBN) {
 
 		try {
-			sql = "update bookshelf set status=true where id =(select min(id) from bookshelf where status = false AND isbn13 = '";
+			sql = "UPDATE bookshelf SET status=true WHERE id =(SELECT min(id) FROM bookshelf WHERE status = false AND isbn13 = '";
 			sql += ISBN;
 			sql += "');";
 			if (st.executeUpdate(sql) == 1) {
@@ -176,7 +181,7 @@ public class PostgreSQL implements IDatabase {
 		Book b;
 		int bookcount = 0;
 		try {
-			sql = "SELECT * FROM bookshelf where isbn13 ='";
+			sql = "SELECT * FROM bookshelf WHERE isbn13 ='";
 			sql += key;
 			sql += "';";
 			result = st.executeQuery(sql);
@@ -186,7 +191,7 @@ public class PostgreSQL implements IDatabase {
 			if (bookcount != 0) {
 				System.out.println("データベース上に " + bookcount + "件 の登録あり");
 				bookcount = 0;
-				sql = "SELECT * FROM bookshelf where isbn13 ='";
+				sql = "SELECT * FROM bookshelf WHERE isbn13 ='";
 				sql += key;
 				sql += "' AND status = true";
 				sql += ";";
@@ -223,7 +228,7 @@ public class PostgreSQL implements IDatabase {
 		int bookcount = 0;
 		String title;
 		String jaStatus;
-		sql = "select * from bookshelf;";
+		sql = "SELECT * FROM bookshelf;";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
@@ -249,7 +254,7 @@ public class PostgreSQL implements IDatabase {
 	public String listStatus(int mode) {
 
 		String jaStatus;
-		sql = "select * from bookshelf where status = false;";
+		sql = "SELECT * FROM bookshelf WHERE status = false;";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
@@ -267,5 +272,53 @@ public class PostgreSQL implements IDatabase {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void addUser(String user) {
+
+		int count = 0;
+		sql = "SELECT * FROM usertable where username=";
+		sql += "'" + user + "';";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				count++;
+			}
+			if (count == 0) {
+				sql = "INSERT INTO usertable VALUES('";
+				sql += user;
+				sql += "');";
+				st.execute(sql);
+				System.out.println("ユーザーを追加しました: " + user);
+			} else {
+				System.out.println("ユーザーがすでに存在します");
+			}
+		} catch (SQLException e) {
+
+		}
+	}
+
+	public void rmUser(String user) {
+
+		int count = 0;
+		try {
+			sql = "SELECT * FROM usertable where username=";
+			sql += "'" + user + "';";
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				count++;
+			}
+			if(count !=0){
+			sql = "DELETE FROM usertable ";
+			sql += "WHERE username = ";
+			sql += "'" + user + "';";
+			st.execute(sql);
+			System.out.println("ユーザーを削除しました: " + user);
+			}else{
+				System.out.println("ユーザーが存在しません");
+			}
+		} catch (SQLException e) {
+
+		}
 	}
 }
