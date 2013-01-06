@@ -316,20 +316,14 @@ public class PostgreSQL implements IDatabase {
 	@Override
 	public String showStatus(int mode) {
 
-		String jaStatus;
-		sql = "SELECT * FROM bookshelf WHERE status = false;";
+		sql = "select bookshelf.title,bookshelf.isbn13,bookshelf.status,userbooks.username from bookshelf,userbooks where bookshelf.isbn13 = userbooks.isbn13;";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
-				if (result.getString(result.findColumn("status")).startsWith(
-						"t")) {
-					jaStatus = "貸出可";
-				} else {
-					jaStatus = "貸出中";
-				}
 				System.out.println(result.getString(result.findColumn("title"))
 						+ "[" + result.getString(result.findColumn("isbn13"))
-						+ "] : " + jaStatus);
+						+ "]  " + "貸出先: "
+						+ result.getString(result.findColumn("username")));
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
