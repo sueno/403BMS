@@ -46,11 +46,11 @@ public class Main {
 			break;
 		case "b":
 		case "borrow":
-			borrowbook(sc.next());
+			borrowbook(sc.next(), sc.next());
 			break;
 		case "r":
 		case "return":
-			returnbook(sc.next());
+			returnbook(sc.next(), sc.next());
 			break;
 		case "s":
 		case "search":
@@ -134,12 +134,12 @@ public class Main {
 	}
 
 	private void removelist(String[] isbn) {
-
+		
 	}
 
-	private void borrowbook(String isbn) {
+	private void borrowbook(String isbn, String userID) {
 
-		if (psql.bBook(isbn)) {
+		if (psql.bBook(isbn,userID)) {
 			System.out.println("借りました");
 		} else {
 			System.out.println("借りられませんでした。");
@@ -147,9 +147,9 @@ public class Main {
 
 	}
 
-	private void returnbook(String isbn) {
+	private void returnbook(String isbn, String userID) {
 
-		if (psql.rBook(isbn)) {
+		if (psql.rBook(isbn,userID)) {
 			System.out.println("返しました");
 		} else {
 			System.out.println("返せませんでした");
@@ -171,7 +171,7 @@ public class Main {
 
 	private void status() {
 
-		psql.listStatus(0);
+		psql.showStatus(0);
 
 	}
 

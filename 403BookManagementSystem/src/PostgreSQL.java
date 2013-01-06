@@ -7,15 +7,15 @@ import java.util.Scanner;
 
 public class PostgreSQL implements IDatabase {
 
-	Scanner			sc		= null;
+	AmazonSearch	amzn	= null;
 
 	Connection		db		= null;
-	Statement		st		= null;
 	ResultSet		result	= null;
+	Scanner			sc		= null;
 
-	String			url		= "jdbc:postgresql:postgres";
 	String			sql		= null;
-	AmazonSearch	amzn	= null;
+	Statement		st		= null;
+	String			url		= "jdbc:postgresql:postgres";
 
 	/*
 	 * CREATE TABLE bookshelf( id SERIAL, title varchar(1000), author
@@ -35,22 +35,6 @@ public class PostgreSQL implements IDatabase {
 					.println("データベースへの接続が失敗しました。PostgreSQLが起動しているかどうか確認してください。");
 			System.out
 					.println("psql -U postgres または、psql -h localhost -U postgresが実行できるか確認してください。");
-		}
-	}
-
-	private void init() throws SQLException {
-
-		amzn = new AmazonSearch();
-		sql = "SELECT * FROM bookshelf;";
-		try {
-			result = st.executeQuery(sql);
-		} catch (SQLException e) {
-			sql = "CREATE TABLE bookshelf(id SERIAL,title varchar(1000),author varchar(1000),isbn10 varchar(20),isbn13 varchar(20),picturl varchar(1000),detailurl varchar(1000),publisher varchar(1000),publicationdate varchar(50),status boolean,year varchar(10));";
-			st.execute(sql);
-			sql = "CREATE TABLE usertable(username varchar(20));";
-			st.execute(sql);
-			sql = "CREATE TABLE userbooks(username varchar(20),isbn13 varchar(15));";
-			st.execute(sql);
 		}
 	}
 
@@ -95,10 +79,150 @@ public class PostgreSQL implements IDatabase {
 					+ ",'"
 					+ year
 					+ "');";
-			System.out.println(sql);
 			st.execute(sql);
 			System.out.println(b.getTitle() + "が追加されました");
 			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void addUser(String userName) {
+
+		sql = "SELECT * FROM usertable where username='" + userName + "';";
+		try {
+			if (!findUser(userName)) {
+				sql = "INSERT INTO usertable VALUES('";
+				sql += userName;
+				sql += "');";
+				st.execute(sql);
+				System.out.println("ユーザーを追加しました: " + userName);
+			} else {
+				System.out.println("ユーザーがすでに存在します");
+			}
+		} catch (SQLException e) {
+
+		}
+	}
+
+	@Override
+	public boolean bBook(String ISBN, String userName) {
+
+		try {
+			// ユーザーIDが存在するか確認する
+			if (findUser(userName)) {
+				// 借りることのできる本を検索
+				sql = "UPDATE bookshelf SET status=false WHERE id =(SELECT min(id) FROM bookshelf WHERE status = true AND isbn13 = '"
+						+ ISBN + "');";
+				if (st.executeUpdate(sql) == 1) {
+
+					// ユーザーIDがどの本を借りたか登録する
+					sql = "INSERT INTO userbooks VALUES(";
+					sql += "'" + userName + "',";
+					sql += "'" + ISBN + "'";
+					sql += ");";
+					st.execute(sql);
+
+					return true;
+				} else {
+					System.out.println("ユーザーが存在しません。adduserで登録してください");
+					return false;
+				}
+			} else {
+				// すべて借りられていた場合
+				sql = "SELECT * FROM userbooks WHERE ";
+				sql += "isbn13 =";
+				sql += "'" + ISBN + "';";
+				result = st.executeQuery(sql);
+				while (result.next()) {
+					System.out.println("この本は "
+							+ result.getString(result.findColumn("username"))
+							+ " にすでに借りられています。");
+				}
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public String listDB() {
+
+		int bookcount = 0;
+		String title;
+		String jaStatus;
+		sql = "SELECT * FROM bookshelf;";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				if (result.getString(result.findColumn("status")).startsWith(
+						"t")) {
+					jaStatus = "貸出可";
+				} else {
+					jaStatus = "貸出中";
+				}
+				title = result.getString(result.findColumn("title"));
+				System.out.println(title + "\t\t[" + jaStatus + "]");
+				bookcount++;
+			}
+			System.out.println("結果:" + bookcount + "冊");
+			return result.toString();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public String showStatus(int mode) {
+
+		String jaStatus;
+		sql = "SELECT * FROM bookshelf WHERE status = false;";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				if (result.getString(result.findColumn("status")).startsWith(
+						"t")) {
+					jaStatus = "貸出可";
+				} else {
+					jaStatus = "貸出中";
+				}
+				System.out.println(result.getString(result.findColumn("title"))
+						+ "[" + result.getString(result.findColumn("isbn13"))
+						+ "] : " + jaStatus);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public boolean rBook(String ISBN, String userName) {
+
+		try {
+			if (findUser(userName)) {
+				sql = "UPDATE bookshelf SET status=true WHERE id =(SELECT min(id) FROM bookshelf WHERE status = false AND isbn13 = '";
+				sql += ISBN;
+				sql += "');";
+				if (st.executeUpdate(sql) == 1) {
+					sql = "DELETE FROM userbooks WHERE ";
+					sql += "username = ";
+					sql += "'" + userName + "'";
+					sql += "AND isbn13='" + ISBN + "';";
+					st.execute(sql);
+					return true;
+				} else {
+					System.out.println("返却できる本がありませんでした。貸出状況を確認してください");
+					return false;
+				}
+			} else {
+				System.out.println("ユーザーが存在しません。adduserで登録してください");
+				return false;
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -122,9 +246,7 @@ public class PostgreSQL implements IDatabase {
 			}
 			return true;
 		} catch (SQLException e) {
-			// e.printStackTrace();
-			System.err
-					.println("\nエラーが発生し、削除できませんでした。\n検索をして本がデータベースに登録してあるか確認してください。");
+			System.err.println("\n削除できませんでした。\n検索をして本がデータベースに登録してあるか確認してください。");
 			return false;
 		}
 	}
@@ -135,43 +257,20 @@ public class PostgreSQL implements IDatabase {
 		return false;
 	}
 
-	@Override
-	public boolean bBook(String ISBN) {
-
-		// 借りられていない同じ本を探すSQL
-		// SELECT * FROM bookshelf WHERE id =(SELECT min(id) FROM bookshelf
-		// WHERE status = true AND isbn13 = 'ISBN');
+	public void rmUser(String userName) {
 
 		try {
-			sql = "UPDATE bookshelf SET status=false WHERE id =(SELECT min(id) FROM bookshelf WHERE status = true AND isbn13 = '";
-			sql += ISBN;
-			sql += "');";
-			if (st.executeUpdate(sql) == 1) {
-				return true;
+			if (findUser(userName)) {
+				sql = "DELETE FROM usertable ";
+				sql += "WHERE username = ";
+				sql += "'" + userName + "';";
+				st.execute(sql);
+				System.out.println("ユーザーを削除しました: " + userName);
 			} else {
-				return false;
+				System.out.println("ユーザーが存在しません");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
-	@Override
-	public boolean rBook(String ISBN) {
-
-		try {
-			sql = "UPDATE bookshelf SET status=true WHERE id =(SELECT min(id) FROM bookshelf WHERE status = false AND isbn13 = '";
-			sql += ISBN;
-			sql += "');";
-			if (st.executeUpdate(sql) == 1) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return false;
 		}
 	}
 
@@ -222,103 +321,39 @@ public class PostgreSQL implements IDatabase {
 		return null;
 	}
 
-	@Override
-	public String listDB() {
-
-		int bookcount = 0;
-		String title;
-		String jaStatus;
-		sql = "SELECT * FROM bookshelf;";
-		try {
-			result = st.executeQuery(sql);
-			while (result.next()) {
-				if (result.getString(result.findColumn("status")).startsWith(
-						"t")) {
-					jaStatus = "貸出可";
-				} else {
-					jaStatus = "貸出中";
-				}
-				title = result.getString(result.findColumn("title"));
-				System.out.println(title + "\t\t[" + jaStatus + "]");
-				bookcount++;
-			}
-			System.out.println("結果:" + bookcount + "冊");
-			return result.toString();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	@Override
-	public String listStatus(int mode) {
-
-		String jaStatus;
-		sql = "SELECT * FROM bookshelf WHERE status = false;";
-		try {
-			result = st.executeQuery(sql);
-			while (result.next()) {
-				if (result.getString(result.findColumn("status")).startsWith(
-						"t")) {
-					jaStatus = "貸出可";
-				} else {
-					jaStatus = "貸出中";
-				}
-				System.out.println(result.getString(result.findColumn("title"))
-						+ "[" + result.getString(result.findColumn("isbn13"))
-						+ "] : " + jaStatus);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	public void addUser(String user) {
+	private boolean findUser(String userName) {
 
 		int count = 0;
 		sql = "SELECT * FROM usertable where username=";
-		sql += "'" + user + "';";
+		sql += "'" + userName + "';";
 		try {
 			result = st.executeQuery(sql);
 			while (result.next()) {
 				count++;
 			}
 			if (count == 0) {
-				sql = "INSERT INTO usertable VALUES('";
-				sql += user;
-				sql += "');";
-				st.execute(sql);
-				System.out.println("ユーザーを追加しました: " + user);
+				return false;
 			} else {
-				System.out.println("ユーザーがすでに存在します");
+				return true;
 			}
 		} catch (SQLException e) {
-
+			return false;
 		}
 	}
 
-	public void rmUser(String user) {
+	private void init() throws SQLException {
 
-		int count = 0;
+		amzn = new AmazonSearch();
+		sql = "SELECT * FROM bookshelf;";
 		try {
-			sql = "SELECT * FROM usertable where username=";
-			sql += "'" + user + "';";
 			result = st.executeQuery(sql);
-			while (result.next()) {
-				count++;
-			}
-			if(count !=0){
-			sql = "DELETE FROM usertable ";
-			sql += "WHERE username = ";
-			sql += "'" + user + "';";
-			st.execute(sql);
-			System.out.println("ユーザーを削除しました: " + user);
-			}else{
-				System.out.println("ユーザーが存在しません");
-			}
 		} catch (SQLException e) {
-
+			sql = "CREATE TABLE bookshelf(id SERIAL,title varchar(1000),author varchar(1000),isbn10 varchar(20),isbn13 varchar(20),picturl varchar(1000),detailurl varchar(1000),publisher varchar(1000),publicationdate varchar(50),status boolean,year varchar(10));";
+			st.execute(sql);
+			sql = "CREATE TABLE usertable(username varchar(20));";
+			st.execute(sql);
+			sql = "CREATE TABLE userbooks(username varchar(20),isbn13 varchar(15));";
+			st.execute(sql);
 		}
 	}
 }

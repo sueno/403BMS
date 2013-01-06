@@ -6,13 +6,13 @@ public interface IDatabase {
 
 	boolean rmBookList(String[] books);
 
-	boolean bBook(String ISBN);
+	boolean bBook(String ISBN, String userID);
 
-	boolean rBook(String ISBN);
+	boolean rBook(String ISBN, String userID);
 
 	String[] searchDB(String key);
 
 	String listDB();
 
-	String listStatus(int mode);
+	String showStatus(int mode);
 }
