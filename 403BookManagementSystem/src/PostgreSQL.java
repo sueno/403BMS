@@ -106,6 +106,11 @@ public class PostgreSQL implements IDatabase {
 		}
 	}
 
+	/*
+	 * (非 Javadoc)
+	 * 
+	 * @see IDatabase#bBook(java.lang.String, java.lang.String)
+	 */
 	@Override
 	public boolean bBook(String ISBN, String userName) {
 
@@ -126,20 +131,24 @@ public class PostgreSQL implements IDatabase {
 
 					return true;
 				} else {
-					System.out.println("ユーザーが存在しません。adduserで登録してください");
+					// すべて借りられていた場合
+
+					sql = "SELECT * FROM userbooks WHERE ";
+					sql += "isbn13 =";
+					sql += "'" + ISBN + "';";
+					result = st.executeQuery(sql);
+					while (result.next()) {
+						System.out.println("この本は "
+								+ result.getString(result
+										.findColumn("username"))
+								+ " にすでに借りられています。");
+					}
+
+					System.out.println("すべて借りられているか、本が登録されていません");
 					return false;
 				}
 			} else {
-				// すべて借りられていた場合
-				sql = "SELECT * FROM userbooks WHERE ";
-				sql += "isbn13 =";
-				sql += "'" + ISBN + "';";
-				result = st.executeQuery(sql);
-				while (result.next()) {
-					System.out.println("この本は "
-							+ result.getString(result.findColumn("username"))
-							+ " にすでに借りられています。");
-				}
+				System.out.println("ユーザーが存在しません。adduserで登録してください");
 				return false;
 			}
 		} catch (SQLException e) {
@@ -177,30 +186,6 @@ public class PostgreSQL implements IDatabase {
 	}
 
 	@Override
-	public String showStatus(int mode) {
-
-		String jaStatus;
-		sql = "SELECT * FROM bookshelf WHERE status = false;";
-		try {
-			result = st.executeQuery(sql);
-			while (result.next()) {
-				if (result.getString(result.findColumn("status")).startsWith(
-						"t")) {
-					jaStatus = "貸出可";
-				} else {
-					jaStatus = "貸出中";
-				}
-				System.out.println(result.getString(result.findColumn("title"))
-						+ "[" + result.getString(result.findColumn("isbn13"))
-						+ "] : " + jaStatus);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	@Override
 	public boolean rBook(String ISBN, String userName) {
 
 		try {
@@ -213,8 +198,15 @@ public class PostgreSQL implements IDatabase {
 					sql += "username = ";
 					sql += "'" + userName + "'";
 					sql += "AND isbn13='" + ISBN + "';";
-					st.execute(sql);
-					return true;
+					if (st.executeUpdate(sql) == 1) {
+						return true;
+					} else {
+						sql = "UPDATE bookshelf SET status=false WHERE id =(SELECT min(id) FROM bookshelf WHERE status = true AND isbn13 = '";
+						sql += ISBN;
+						sql += "');";
+						st.execute(sql);
+						return false;
+					}
 				} else {
 					System.out.println("返却できる本がありませんでした。貸出状況を確認してください");
 					return false;
@@ -316,6 +308,30 @@ public class PostgreSQL implements IDatabase {
 			System.out.println("出版社\t: " + b.getPublisher());
 			System.out.println();
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public String showStatus(int mode) {
+
+		String jaStatus;
+		sql = "SELECT * FROM bookshelf WHERE status = false;";
+		try {
+			result = st.executeQuery(sql);
+			while (result.next()) {
+				if (result.getString(result.findColumn("status")).startsWith(
+						"t")) {
+					jaStatus = "貸出可";
+				} else {
+					jaStatus = "貸出中";
+				}
+				System.out.println(result.getString(result.findColumn("title"))
+						+ "[" + result.getString(result.findColumn("isbn13"))
+						+ "] : " + jaStatus);
+			}
+		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return null;
