@@ -18,7 +18,7 @@ public class XMLTextProc {
 		return false;
 	}
 
-	public String searchMultiValues(String key) {
+	public String getMultiValues(String key) {
 
 		int start = 0;
 		String result = "";
@@ -32,7 +32,7 @@ public class XMLTextProc {
 		return result;
 	}
 
-	public String searchSingleValue(String key) {
+	public String getSingleValue(String key) {
 
 		int beginIndex = xml.indexOf("<" + key + ">");
 		int endIndex = xml.indexOf("</" + key + ">");
@@ -44,7 +44,7 @@ public class XMLTextProc {
 		return result;
 	}
 
-	public String searchSingleValue(String key, int start) {
+	public String getSingleValue(String key, int start) {
 
 		int beginIndex = xml.indexOf("<" + key + ">", start);
 		int endIndex = xml.indexOf("</" + key + ">", start);

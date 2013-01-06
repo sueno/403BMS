@@ -17,25 +17,25 @@ class AmazonSearch {
 		Book b = new Book();
 		XMLTextProc xml = new XMLTextProc(this.getBookXML(str));
 		if (xml.searchCheck()) {
-			b.setTitle(xml.searchSingleValue("Title"));
-			b.setAuthor(xml.searchMultiValues("Author"));
-			b.setISBN10(xml.searchSingleValue("ISBN"));
+			b.setTitle(xml.getSingleValue("Title"));
+			b.setAuthor(xml.getMultiValues("Author"));
+			b.setISBN10(xml.getSingleValue("ISBN"));
 			b.setISBN13(str);
-			b.setPublisher(xml.searchSingleValue("Publisher"));
+			b.setPublisher(xml.getSingleValue("Publisher"));
 			XMLTextProc picChild = new XMLTextProc(
-					xml.searchSingleValue("MediumImage"));
+					xml.getSingleValue("MediumImage"));
 			try {
-				String beforeUrlPict = picChild.searchSingleValue("URL");
-				String beforeUrlDetail = xml.searchSingleValue("DetailPageURL");
+				String longUrlPict = picChild.getSingleValue("URL");
+				String longUrlDetail = xml.getSingleValue("DetailPageURL");
 				String picUrl = Bitly
 						.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e")
-						.call(shorten(beforeUrlPict)).getShortUrl();
+						.call(shorten(longUrlPict)).getShortUrl();
 				String detailUrl = Bitly
 						.as("nokok", "R_52ef6d95b7182dd697e69c7e2dbee19e")
-						.call(shorten(beforeUrlDetail)).getShortUrl();
+						.call(shorten(longUrlDetail)).getShortUrl();
 				b.setPictURL(picUrl);
 				b.setDetailURL(detailUrl);
-				b.setPublicationDate(xml.searchSingleValue("PublicationDate"));
+				b.setPublicationDate(xml.getSingleValue("PublicationDate"));
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
