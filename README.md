@@ -4,6 +4,9 @@
 PostgreSQLを利用して管理します。  
 
 現在、以下のコマンドに対応しています。
+  
+     adduser [username]     ユーザーを追加します
+     rmuser [username]      ユーザーを削除します
 
      add [ISBN]             本を追加します  
      inf  
